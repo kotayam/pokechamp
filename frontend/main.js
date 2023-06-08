@@ -1,5 +1,5 @@
 // poke api
-const APILINK = 'https://pokeapi.co/api/v2/pokemon/pikachu';
+const APILINK = 'https://pokeapi.co/api/v2/pokemon/mandibuzz';
 
 // retrieved data from database
 let pokeName = '';
