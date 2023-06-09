@@ -9,7 +9,8 @@ let posts;
 
 window.onload = function() {
     posts = document.getElementById("posts");
-    //returnPoke(APILINK);
+    //
+    returnPoke(APILINK);
 }
 
 function returnPoke(url) {
