@@ -33,7 +33,7 @@ function returnParties(url) {
           </div>
         </div>
       </div>
-      </a>`
+      </a>`;
       });
     });
   });
