@@ -1,5 +1,4 @@
-import { ObjectId } from "mongodb";
-// const ObjectId = mongodb.ObjectID;
+import {ObjectId} from "mongodb";
 
 let parties;
 
@@ -49,7 +48,7 @@ export default class PartiesDAO {
                     series: series,
                     user: user,
                     party: party,
-                    comment: comment}
+                    comment: comment }
                 }
             );
 
@@ -72,8 +71,8 @@ export default class PartiesDAO {
 
     static async getAllParties() {
         try {
-            const allParties = await parties.find();
-            return allParties.toArray();
+            const cursor = await parties.find();
+            return cursor.toArray();
         } catch (e) {
             console.error(`Unable to get all parties: ${e}`);
             return { error: e };

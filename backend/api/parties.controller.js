@@ -25,7 +25,6 @@ export default class PartiesController {
     static async apiGetParty(req, res, next) {
         try {
             let partyId = req.params.id || {};
-            console.log(partyId);
             let party = await PartiesDAO.getParty(partyId);
             if (!party) {
                 res.status(404).json({ error: "Not found"});
@@ -39,7 +38,7 @@ export default class PartiesController {
 
     static async apiUpdateParty(req, res, next) {
         try {
-            const partyId = req.body.id;
+            const partyId = req.params.id;
             const title = req.body.title;
             const series = req.body.series;
             const user = req.body.user;
@@ -54,8 +53,6 @@ export default class PartiesController {
                 party,
                 comment
             );
-
-            console.log(partyResponse);
 
             var { error } = partyResponse;
             if (error) {
@@ -92,7 +89,7 @@ export default class PartiesController {
                 res.status(404).json({ error: "Not found"});
                 return;
             }
-            res.json(reviews);
+            res.json(parties);
         } catch (e) {
             res.status(500).json({ error: e });
         }

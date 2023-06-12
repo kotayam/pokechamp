@@ -5,11 +5,11 @@ const router = express.Router();
 
 router.route("/:id")
     .get(PartiesCtrl.apiGetParty) 
-    .put(PartiesCtrl.apiUpdateParty);
+    .put(PartiesCtrl.apiUpdateParty)
+    .delete(PartiesCtrl.apiDeleteParty); 
 
 router.route("/")
     .get(PartiesCtrl.apiGetAllParties)
-    .post(PartiesCtrl.apiPostParty)
-    .delete(PartiesCtrl.apiDeleteParty); 
+    .post(PartiesCtrl.apiPostParty);
     
 export default router;
