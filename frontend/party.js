@@ -35,27 +35,18 @@ function returnParty(url) {
       let pt = JSON.parse(data.party);
       let poke = document.querySelector(".poke");
       pt.forEach(p => {
-        poke.innerHTML += 
+        getPokeInfo(POKE_APILINK + p)
+        .then(info => {
+            poke.innerHTML += 
         `<li>
-        <img src=test alt="image of test" />
+        <img src=${info[0]} alt="image of ${info[1]}" />
         <div class="stats">
-          <p><strong>Name: </strong>test</p>
-          <p><strong>Type: </strong>test</p>
-          <p><strong>Abilities: </strong>test</p>
+          <p><strong>Name: </strong>${info[1]}</p>
+          <p><strong>Type: </strong>${returnString(info[2])}</p>
+          <p><strong>Abilities: </strong>${returnString(info[3])}</p>
         </div>
       </li>`;
-    //     getPokeInfo(POKE_APILINK + p)
-    //     .then(info => {
-    //         poke.innerHTML += 
-    //     `<li>
-    //     <img src=${info[0]} alt="image of ${info[1]}" />
-    //     <div class="stats">
-    //       <p><strong>Name: </strong>${info[1]}</p>
-    //       <p><strong>Type: </strong>${returnString(info[2])}</p>
-    //       <p><strong>Abilities: </strong>${returnString(info[3])}</p>
-    //     </div>
-    //   </li>`;
-    //     });
+        });
       });
     });
     
@@ -127,8 +118,19 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
     const title = document.getElementById(titleInputId).value;
     const series = document.getElementById(seriesInputId).value;
     const user = document.getElementById(userInputId).value;
-    const pt = JSON.stringify(document.getElementById(partyInputId).value.split(','));
+    let pt = document.getElementById(partyInputId).value.toLowerCase().split(',');
     const comment = document.getElementById(commentInputId).value;
+
+    if (!(title && series && user && pt && comment)) {
+        alert("please fill out everything");
+        return;
+    }
+    if (pt.length > 6) {
+        alert("party can contain max 6 pokemon");
+        return;
+    }
+
+    pt = JSON.stringify(pt);
 
     fetch(DB_APILINK + partyId, {
         method: 'PUT',
@@ -146,11 +148,16 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
     })
     .then(res => res.json())
     .then(res => {
-        console.log(res);
         location.reload();
     });
 }
 
 function deleteParty() {
-
+    fetch(DB_APILINK + partyId, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(res => {
+        location.reload();
+    });
 }

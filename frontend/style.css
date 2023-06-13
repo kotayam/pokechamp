@@ -23,9 +23,32 @@ body {
     font-weight: 600;
 }
 
+.navbar {
+    padding: 1rem;
+    border-bottom: 1px solid;
+}
+
+.new-post {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    padding: 0.3rem;
+    width: 40%;
+    border: 1px solid;
+    background: beige;
+}
+
+.new-post button {
+    margin-top: 4px;
+    padding: 2px;
+}
+
+#posts {
+    padding: 1rem;
+}
+
 .col {
     float: left;
-    width: 350px;
+    width: 400px;
     padding: 10px;
 }
 
@@ -73,7 +96,7 @@ body {
 
 .main h2 {
     font-weight: 500;
-    background-color: rgb(240, 240, 103)
+    background-color: rgb(240, 240, 103);
 }
 
 .main p {

@@ -16,8 +16,7 @@ function returnParties(url) {
   .then(function(data){
     data.forEach(element => {
       let party = JSON.parse(element.party);
-      // getPokeIMG(POKE_APILINK + party[0])
-      getPokeIMG(party[0])
+      getPokeIMG(POKE_APILINK + party[0])
       .then(pokeImg => {
         posts.innerHTML += 
         `<a href="party.html?id=${element._id}">
@@ -47,4 +46,42 @@ async function getPokeIMG(url) {
   } catch (err) {
     console.error(err);
   }
+}
+
+function createParty() {
+  const title = document.getElementById("newTitle").value;
+  const series = document.getElementById("newSeries").value;
+  const user = document.getElementById("newUser").value;
+  let party = document.getElementById("newParty").value.toLowerCase().split(",");
+  const comment = document.getElementById("newComment").value;
+
+  if (!(title && series && user && party && comment)) {
+    alert("please fill out everything");
+    return;
+  }
+  if (party.length > 6) {
+    alert("party can contain max 6 pokemon");
+    return;
+  }
+
+  party = JSON.stringify(party);
+
+  fetch(DB_APILINK, {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        "title": title,
+        "series": series,
+        "user": user,
+        "party": party,
+        "comment": comment
+    })
+})
+.then(res => res.json())
+.then(res => {
+    location.reload();
+});
 }
