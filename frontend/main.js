@@ -14,10 +14,10 @@ window.onload = function() {
 function returnParties(url) {
   fetch(url).then(res => res.json())
   .then(function(data){
-    console.log(data);
     data.forEach(element => {
       let party = JSON.parse(element.party);
-      getPokeIMG(POKE_APILINK + party[0])
+      // getPokeIMG(POKE_APILINK + party[0])
+      getPokeIMG(party[0])
       .then(pokeImg => {
         posts.innerHTML += 
         `<a href="party.html?id=${element._id}">
@@ -27,9 +27,9 @@ function returnParties(url) {
             <div class="thumbnail-container">
               <img class="thumbnail" src="${pokeImg}" alt="img of ${party[0]}" />
             </div>
-            <p class="title">Title: ${element.title}</p>
-            <p class="series">Series: ${element.series}</p>
-            <p class="username">By: ${element.user}</p>
+            <p class="title"><strong>Title: </strong>${element.title}</p>
+            <p class="series"><strong>Series: </strong>${element.series}</p>
+            <p class="username"><strong>By: </strong>${element.user}</p>
           </div>
         </div>
       </div>

@@ -99,4 +99,10 @@ body {
     border: 1px solid;
 }
 
+#party .main input {
+    width: 50%;
+    font-size: 1.3rem;
+    padding: 3px;
+}
+
 
