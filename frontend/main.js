@@ -3,10 +3,20 @@ const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
 const DB_APILINK = 'http://localhost:8000/api/v1/parties/';
 
+// Access: ADMIN, EDITOR, GUEST
+let access = "GUEST";
+
 // html elements
 let posts;
+let header;
 
 window.onload = function() {
+  header = document.querySelector(".header");
+  header.innerHTML += 
+  `<div class="login">
+  <p> You are currently a ${access}</p>
+  <button onclick="location.href='login.html'">Login</button>
+</div>`
     posts = document.getElementById("posts");
     returnParties(DB_APILINK);
 }
@@ -85,3 +95,8 @@ function createParty() {
     location.reload();
 });
 }
+
+function refreshPage() {
+  location.reload();
+}
+

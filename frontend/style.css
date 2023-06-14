@@ -15,12 +15,28 @@ body {
 }
 
 .header a {
+    float: left;
     text-decoration: none;
     color: white;
 }
 
 .header h1 {
     font-weight: 600;
+}
+
+.header p {
+    color: white;
+}
+
+.login {
+    float: right;
+    margin-right: 1rem;
+}
+
+.login button {
+    float: right;
+    padding: 2px;
+    margin-top: 2px;
 }
 
 .navbar {
@@ -44,6 +60,10 @@ body {
 
 #posts {
     padding: 1rem;
+}
+
+#posts button {
+    padding: 2px;
 }
 
 .col {
