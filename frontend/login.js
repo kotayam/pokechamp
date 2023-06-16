@@ -18,12 +18,14 @@ window.onload = function() {
           <input id="password" type="password" placeholder="Password" />
         </div>
         <div class="function-box">
-          <button onclick="login()">Login</button>
+          <button id="login-button">Login</button>
           <p>or</p>
           <a href="login.html?f=create-account">Create new account</a>
         </div>
         <a href="index.html">return to home</a>
       </div>`
+      const loginButton = document.getElementById("login-button");
+      loginButton.onclick = login;
     }
     else if (foo === "create-account") {
         acc.innerHTML = 
@@ -41,10 +43,12 @@ window.onload = function() {
           <input id="confirm-password" type="password" placeholder="Confirm password" />
         </div>
         <div class="function-box">
-          <button onclick="createAccount()">Create Account</button>
+          <button id="create-account-button">Create Account</button>
         </div>
         <a href="index.html">return to home</a>
       </div>`
+      const createAccButton = document.getElementById("create-account-button");
+      createAccButton.onclick = createAccount;
     }
 }
 
@@ -71,11 +75,12 @@ function login() {
     .then(res => res.json())
     .then(res => {
         if (res.status === "success") {
-            location.href = `index.html?user=${username}`;
+            location.href = "index.html";
         } else {
             alert("incorrect username or password")
         }
-    });
+    })
+    .catch(e => alert("failed to connect to server"));
 }
 
 function createAccount() {
@@ -104,7 +109,12 @@ function createAccount() {
         })
     })
     .then(res => res.json())
-    .then(res => console.log(res));
-
-    location.href = "login.html?f=login";
+    .then(res => {
+        if (res.status === "success") {
+            location.href = "login.html?f=login";
+        } else {
+            alert("username already exists")
+        }
+    })
+    .catch(e => alert("failed to connect to server"));
 }

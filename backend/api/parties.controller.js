@@ -101,7 +101,7 @@ export default class PartiesController {
             const password = req.body.password;
             const loginResponse = await PartiesDAO.login(username, password);
             if (loginResponse) {
-                res.json({ status: "success"});
+                res.json({ status: "success", access: loginResponse});
             } else {
                 res.status(400).json({ error: "incorrect username or password" });
             }
@@ -115,8 +115,8 @@ export default class PartiesController {
             const username = req.body.username;
             const password = req.body.password;
             const createAccountResponse = await PartiesDAO.createAccount(username, password);
-            if (loginResponse) {
-                res.json({ status: "success"});
+            if (createAccountResponse) {
+                res.json({ status: "success" });
             } else {
                 res.status(400).json({ error: "username already exists" });
             }

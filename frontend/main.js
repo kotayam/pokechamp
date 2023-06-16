@@ -3,12 +3,12 @@ const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
 const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
-// Access: ADMIN, EDITOR, GUEST
-let user = "GUEST";
-
 // html elements
 let posts;
 let header;
+let newParty;
+
+let user = "Guest";
 
 window.onload = function() {
   header = document.querySelector(".header");
@@ -17,8 +17,50 @@ window.onload = function() {
   <p> Logged in as: ${user}</p>
   <a href="login.html?f=login"><button>Login</button></a>
 </div>`
-    posts = document.getElementById("posts");
-    returnParties(DB_APILINK);
+  newParty = document.getElementById("new-party");
+    newParty.innerHTML = 
+    `<div class="navbar">
+    <p>
+      Use PokeChamp to see what party other pokemon trainers used to beat
+      the champion! Share your party by filling out the form below and
+      pressing "Create Post"!
+    </p>
+    <div class="new-post">
+      <p>
+        <strong>Title: </strong>
+        <input type="text" id="newTitle" placeholder="New Party" />
+      </p>
+      <p>
+        <strong>Series: </strong>
+        <input type="text" id="newSeries" placeholder="Diamond" />
+      </p>
+      <p>
+        <strong>By: </strong>
+        <input type="text" id="newUser" placeholder="Username" />
+      </p>
+      <p>
+        <strong>Party: </strong>
+        <input
+          type="text"
+          id="newParty"
+          oninput="this.size = this.value.length + 1"
+          placeholder="pikachu,charizard,mewtwo"
+        />
+      </p>
+      <p>
+        <strong>Comment: </strong>
+        <input
+          type="text"
+          id="newComment"
+          oninput="this.size = this.value.length"
+          placeholder="I love this party!"
+        />
+      </p>
+      <button onclick="createParty()">Create Post</button>
+    </div>
+  </div>`;
+  posts = document.getElementById("posts");
+  returnParties(DB_APILINK);
 }
 
 function returnParties(url) {

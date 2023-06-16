@@ -76,9 +76,9 @@ export default class PartiesDAO {
             return;
         }
         try {
-            const validPass = bcrypt.compare(password, doc.password)
+            const validPass = await bcrypt.compare(password, doc.password);
             if (validPass) {
-                return "sucess";
+                return doc.access;
             } else {
                 console.log("wrong password");
                 return;
