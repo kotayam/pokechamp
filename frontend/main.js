@@ -1,10 +1,10 @@
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
-const DB_APILINK = 'http://localhost:8000/api/v1/parties/';
+const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 // Access: ADMIN, EDITOR, GUEST
-let access = "GUEST";
+let user = "GUEST";
 
 // html elements
 let posts;
@@ -14,8 +14,8 @@ window.onload = function() {
   header = document.querySelector(".header");
   header.innerHTML += 
   `<div class="login">
-  <p> You are currently a ${access}</p>
-  <button onclick="location.href='login.html'">Login</button>
+  <p> Logged in as: ${user}</p>
+  <a href="login.html?f=login"><button>Login</button></a>
 </div>`
     posts = document.getElementById("posts");
     returnParties(DB_APILINK);

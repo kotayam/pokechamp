@@ -33,10 +33,13 @@ body {
     margin-right: 1rem;
 }
 
-.login button {
+.login a {
     float: right;
-    padding: 2px;
     margin-top: 2px;
+}
+
+.login a button {
+    padding: 2px;
 }
 
 .navbar {
@@ -87,6 +90,48 @@ body {
     border: 1px solid black;
     background-color: white;
     margin-right: 1rem;
+}
+
+.login-box {
+    width: 30%;
+    margin: 4rem auto;
+    background: beige;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 1px solid;
+}
+
+.login-box input {
+    padding: 2px;
+    font-size: 1rem;
+}
+
+.login-box a {
+    display: block;
+    font-size: 1rem;
+}
+
+.username-box {
+    margin-bottom: 5px;
+}
+
+.password-box {
+    margin-bottom: 5px;
+}
+
+.function-box {
+    padding: 4px;
+}
+
+.function-box button {
+    padding: 2px;
+    font-size: 1rem;
+}
+
+.function-box p {
+    font-size: 1.3rem;
+    margin: 2px;
 }
 
 #party {

@@ -1,8 +1,9 @@
-// backend
+// retrieve id from url query
 const url = new URL(location.href);
 const partyId = url.searchParams.get("id");
 
-const DB_APILINK = 'http://localhost:8000/api/v1/parties/';
+// backend api
+const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';

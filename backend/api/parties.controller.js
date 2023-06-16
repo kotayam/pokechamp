@@ -94,4 +94,34 @@ export default class PartiesController {
             res.status(500).json({ error: e });
         }
     }
+
+    static async apiLogin(req, res, next) {
+        try {
+            const username = req.body.username;
+            const password = req.body.password;
+            const loginResponse = await PartiesDAO.login(username, password);
+            if (loginResponse) {
+                res.json({ status: "success"});
+            } else {
+                res.status(400).json({ error: "incorrect username or password" });
+            }
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
+    }
+
+    static async apiCreateAccount(req, res, next) {
+        try {
+            const username = req.body.username;
+            const password = req.body.password;
+            const createAccountResponse = await PartiesDAO.createAccount(username, password);
+            if (loginResponse) {
+                res.json({ status: "success"});
+            } else {
+                res.status(400).json({ error: "username already exists" });
+            }
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
+    }
 }

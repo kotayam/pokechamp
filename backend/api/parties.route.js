@@ -11,5 +11,11 @@ router.route("/:id")
 router.route("/")
     .get(PartiesCtrl.apiGetAllParties)
     .post(PartiesCtrl.apiPostParty);
+
+router.route("/login")
+    .post(PartiesCtrl.apiLogin);
+
+router.route("/create-account")
+    .post(PartiesCtrl.apiCreateAccount);
     
 export default router;
