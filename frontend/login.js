@@ -75,7 +75,7 @@ function login() {
     .then(res => res.json())
     .then(res => {
         if (res.status === "success") {
-            location.href = "index.html";
+            location.href = `index.html?userId=${res.userId}`;
         } else {
             alert("incorrect username or password")
         }

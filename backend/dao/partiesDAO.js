@@ -1,17 +1,21 @@
 import {ObjectId} from "mongodb";
 import { Party, Account } from "../odm/model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default class PartiesDAO {
 
-    static async addParty(title, series, user, party, comment) {
+    static async addParty(title, series, user, party, comment, userId) {
         try {
             const partyDoc = {
                 title: title,
                 series: series,
                 user: user,
                 party: party,
-                comment: comment
+                comment: comment,
+                userId: userId
             };
             return await Party.create(partyDoc); 
         } catch (e) {
@@ -29,7 +33,7 @@ export default class PartiesDAO {
         }
     }
 
-    static async updateParty(partyId, title, series, user, party, comment) {
+    static async updateParty(partyId, title, series, user, party, comment, userId) {
         try {
             const updateResponse = await Party.updateOne(
                 { _id: new ObjectId(partyId) },
@@ -38,7 +42,9 @@ export default class PartiesDAO {
                     series: series,
                     user: user,
                     party: party,
-                    comment: comment }
+                    comment: comment,
+                    userId: userId 
+                }
                 }
             );
 
@@ -69,6 +75,18 @@ export default class PartiesDAO {
         }
     }
 
+    static async getUserInfo(userId) {
+        try {
+            const userInfo = await Account.findOne({ _id: userId });
+            if(!userInfo) {
+                return;
+            }
+            return userInfo;
+        } catch (e) {
+            return;
+        }
+    }
+
     static async login(username, password) {
         const doc = await Account.findOne({ username: username });
         // if account does not exist
@@ -78,7 +96,14 @@ export default class PartiesDAO {
         try {
             const validPass = await bcrypt.compare(password, doc.password);
             if (validPass) {
-                return doc.access;
+                const user = {
+                    _id: doc._id, 
+                    username: doc.username, 
+                    acess: doc.access,
+                     __v: doc.__v
+                    };
+                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15min' });
+                return [accessToken, doc._id];
             } else {
                 console.log("wrong password");
                 return;

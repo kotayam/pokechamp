@@ -6,7 +6,8 @@ const partySchema = new mongoose.Schema({
     series: String,
     user: String,
     party: String,
-    comment: String
+    comment: String,
+    userId: String
 });
 
 // account schema

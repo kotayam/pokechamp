@@ -1,3 +1,6 @@
+const url = new URL(location.href);
+const userId = url.searchParams.get("userId") || "Guest";
+
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
@@ -8,16 +11,21 @@ let posts;
 let header;
 let newParty;
 
-let user = "Guest";
-
 window.onload = function() {
   header = document.querySelector(".header");
-  header.innerHTML += 
-  `<div class="login">
-  <p> Logged in as: ${user}</p>
+  if (userId === "Guest") {
+    header.innerHTML += 
+  `<a href="index.html?userId=${userId}"><h1>PokeChamp</h1></a>
+  <div class="login">
+  <p> Logged in as: ${username}</p>
   <a href="login.html?f=login"><button>Login</button></a>
-</div>`
-  newParty = document.getElementById("new-party");
+  </div>`
+  } else {
+    returnUsername(DB_APILINK + `user/${userId}`);
+  }
+
+  if (userId !== "Guest") {
+    newParty = document.getElementById("new-party");
     newParty.innerHTML = 
     `<div class="navbar">
     <p>
@@ -56,22 +64,40 @@ window.onload = function() {
           placeholder="I love this party!"
         />
       </p>
-      <button onclick="createParty()">Create Post</button>
+      <button id="create-button" onclick="createParty()">Create Post</button>
     </div>
   </div>`;
+    let createButton = document.getElementById("create-button");
+    createButton.onclick = createParty;
+  }
   posts = document.getElementById("posts");
-  returnParties(DB_APILINK);
+  returnParties(DB_APILINK + `home/${userId}`);
+}
+
+function returnUsername(url) {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const username = data.username;
+      header.innerHTML += 
+      `<a href="index.html?userId=${userId}"><h1>PokeChamp</h1></a>
+      <div class="login">
+      <p> Logged in as: ${username}</p>
+      <a href="login.html?f=login"><button>Login</button></a>
+      </div>`
+    });
 }
 
 function returnParties(url) {
-  fetch(url).then(res => res.json())
+  fetch(url)
+  .then(res => res.json())
   .then(function(data){
     data.forEach(element => {
       let party = JSON.parse(element.party);
       getPokeIMG(POKE_APILINK + party[0])
       .then(pokeImg => {
         posts.innerHTML += 
-        `<a href="party.html?id=${element._id}">
+        `<a href="party.html?partyId=${element._id}&userId=${userId}">
         <div class="row">
           <div class="col">
           <div class="card">
@@ -118,7 +144,7 @@ function createParty() {
 
   party = JSON.stringify(party);
 
-  fetch(DB_APILINK, {
+  fetch(DB_APILINK + "home/" + userId, {
     method: 'POST',
     headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -129,7 +155,8 @@ function createParty() {
         "series": series,
         "user": user,
         "party": party,
-        "comment": comment
+        "comment": comment,
+        "userId": userId
     })
 })
 .then(res => res.json())

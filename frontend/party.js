@@ -1,9 +1,10 @@
 // retrieve id from url query
 const url = new URL(location.href);
-const partyId = url.searchParams.get("id");
+const partyId = url.searchParams.get("partyId");
+const userId = url.searchParams.get("userId") || "";
 
 // backend api
-const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
+const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/party/';
 
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
@@ -12,19 +13,25 @@ const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 let party;
 
 window.onload = function() {
+    let header = document.querySelector(".header");
+    header.innerHTML += 
+    `<a href="index.html?userId=${userId}"><h1>PokeChamp</h1></a>`;
     party = document.getElementById("party");
-    returnParty(DB_APILINK + partyId);
+    returnParty(DB_APILINK + partyId + "/" + userId);
 }
 
 function returnParty(url) {
     fetch(url)
     .then(res => res.json())
     .then(data => {
+      if (userId === data.userId) {
         party.innerHTML += 
         `<div class="toolbar">
         <a href="#" onclick='editParty("${data.title}", "${data.series}", "${data.user}", ${JSON.stringify(data.party)}, "${data.comment}")'>&#9999;&#65039;</a>
-        <a href="index.html" onclick="deleteParty()">&#128465;&#65039;</a>
-      </div>
+        <a href="index.html?userId=${userId}" onclick="deleteParty()">&#128465;&#65039;</a>`;
+      }
+      party.innerHTML +=
+      `</div>
         <div class="main">
         <h2><strong>Title: </strong>${data.title}</h2>
         <p><strong>Series: </strong>${data.series}</p>
@@ -133,7 +140,7 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
 
     pt = JSON.stringify(pt);
 
-    fetch(DB_APILINK + partyId, {
+    fetch(DB_APILINK + partyId + "/" + userId, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -144,7 +151,8 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
             "series": series,
             "user": user,
             "party": pt,
-            "comment": comment
+            "comment": comment,
+            "userId": userId
         })
     })
     .then(res => res.json())
@@ -154,7 +162,7 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
 }
 
 function deleteParty() {
-    fetch(DB_APILINK + partyId, {
+    fetch(DB_APILINK + partyId + "/" + userId, {
         method: 'DELETE'
     })
     .then(res => res.json())

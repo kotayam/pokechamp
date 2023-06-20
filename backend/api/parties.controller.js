@@ -1,4 +1,5 @@
 import PartiesDAO from "../dao/partiesDAO.js";
+import jwt from "jsonwebtoken";
 
 export default class PartiesController {
     static async apiPostParty(req, res, next) {
@@ -8,13 +9,15 @@ export default class PartiesController {
             const user = req.body.user;
             const party = req.body.party; // contains up to 6 pokemon
             const comment = req.body.comment;
+            const userId = req.params.userId;
 
             const partyResponse = await PartiesDAO.addParty(
                 title,
                 series,
                 user,
                 party,
-                comment
+                comment,
+                userId
             );
             res.json({ status: "success"});
         } catch (e) {
@@ -24,7 +27,7 @@ export default class PartiesController {
 
     static async apiGetParty(req, res, next) {
         try {
-            let partyId = req.params.id || {};
+            let partyId = req.params.partyId || {};
             let party = await PartiesDAO.getParty(partyId);
             if (!party) {
                 res.status(404).json({ error: "Not found"});
@@ -38,12 +41,13 @@ export default class PartiesController {
 
     static async apiUpdateParty(req, res, next) {
         try {
-            const partyId = req.params.id;
+            const partyId = req.params.partyId;
             const title = req.body.title;
             const series = req.body.series;
             const user = req.body.user;
             const party = req.body.party; // contains up to 6 pokemon
             const comment = req.body.comment;
+            const userId = req.params.userId;
             
             const partyResponse = await PartiesDAO.updateParty(
                 partyId,
@@ -51,7 +55,8 @@ export default class PartiesController {
                 series,
                 user,
                 party,
-                comment
+                comment,
+                userId
             );
 
             var { error } = partyResponse;
@@ -74,8 +79,9 @@ export default class PartiesController {
     
     static async apiDeleteParty(req, res, next) {
         try {
-            const partyId = req.params.id;
-            const partyResponse = await PartiesDAO.deleteParty(partyId);
+            const partyId = req.params.partyId;
+            const userId = req.params.userId;
+            const partyResponse = await PartiesDAO.deleteParty(partyId, userId);
             res.json({ status: "success" });
         } catch (e) {
             res.status(500).json({ error: e.message });
@@ -95,13 +101,26 @@ export default class PartiesController {
         }
     }
 
+    static async apiGetUserInfo(req, res, next) {
+        try {
+            const userId = req.params.userId;
+            const userInfo = await PartiesDAO.getUserInfo(userId);
+            if (!userInfo) {
+                res.status(400).json({ error: "could not find user"});
+            }
+            res.json(userInfo);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
+    }
+
     static async apiLogin(req, res, next) {
         try {
             const username = req.body.username;
             const password = req.body.password;
-            const loginResponse = await PartiesDAO.login(username, password);
-            if (loginResponse) {
-                res.json({ status: "success", access: loginResponse});
+            const loginRes = await PartiesDAO.login(username, password);
+            if (loginRes) {
+                res.json({ status: "success", accessToken: loginRes[0], userId: loginRes[1] });
             } else {
                 res.status(400).json({ error: "incorrect username or password" });
             }
@@ -123,5 +142,24 @@ export default class PartiesController {
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
+    }
+
+    static async authenticateToken(req, res, next) {
+        // const userId = req.params.userId;
+        // if (!userId) {
+        //     next();
+        // }
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (token == null) {
+            return res.status(401).json({ error: "access denied"});
+        }
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.status(403).json({ error: "do not have auth"});
+            }
+            req.user = user;
+            next();
+        });
     }
 }
