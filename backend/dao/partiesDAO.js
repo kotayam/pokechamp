@@ -20,7 +20,7 @@ export default class PartiesDAO {
             return await Party.create(partyDoc); 
         } catch (e) {
             console.error(`Unable to post party: ${e}`);
-            return { error: e };
+            throw new Error("unable to post party");
         }
     }
 
@@ -29,7 +29,7 @@ export default class PartiesDAO {
             return await Party.findOne({ _id: new ObjectId(partyId) });
         } catch (e) {
             console.error(`Unable to get party: ${e}`);
-            return { error: e };
+            throw new Error("unable to get party");
         }
     }
 
@@ -47,11 +47,10 @@ export default class PartiesDAO {
                 }
                 }
             );
-
             return updateResponse;
         } catch (e) {
-            console.error(`Unable to put party: ${e}`);
-            return { error: e };
+            console.error(`Unable to update party: ${e}`);
+            throw new Error("unable to update party");
         }
     }
 
@@ -61,7 +60,7 @@ export default class PartiesDAO {
             return deleteResponse;
         } catch (e) {
             console.error(`Unable to delete party: ${e}`);
-            return { error: e };
+            throw new Error("unable to delete party")
         }
     }
 
@@ -99,11 +98,10 @@ export default class PartiesDAO {
                 const user = {
                     _id: doc._id, 
                     username: doc.username, 
-                    acess: doc.access,
-                     __v: doc.__v
+                    access: doc.access
                     };
                 const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15min' });
-                return [accessToken, doc._id];
+                return accessToken;
             } else {
                 console.log("wrong password");
                 return;

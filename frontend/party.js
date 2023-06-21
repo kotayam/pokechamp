@@ -1,7 +1,6 @@
 // retrieve id from url query
 const url = new URL(location.href);
 const partyId = url.searchParams.get("partyId");
-const userId = url.searchParams.get("userId") || "";
 
 // backend api
 const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/party/';
@@ -15,45 +14,49 @@ let party;
 window.onload = function() {
     let header = document.querySelector(".header");
     header.innerHTML += 
-    `<a href="index.html?userId=${userId}"><h1>PokeChamp</h1></a>`;
+    `<a href="index.html"><h1>PokeChamp</h1></a>`;
     party = document.getElementById("party");
-    returnParty(DB_APILINK + partyId + "/" + userId);
+    returnParty(DB_APILINK + partyId);
 }
 
 function returnParty(url) {
-    fetch(url)
+    fetch(url, {
+      method: "GET",
+      credentials: 'include'
+    })
     .then(res => res.json())
     .then(data => {
-      if (userId === data.userId) {
+      const p = data.party;
+      if (data.userId === p.userId) {
         party.innerHTML += 
         `<div class="toolbar">
-        <a href="#" onclick='editParty("${data.title}", "${data.series}", "${data.user}", ${JSON.stringify(data.party)}, "${data.comment}")'>&#9999;&#65039;</a>
-        <a href="index.html?userId=${userId}" onclick="deleteParty()">&#128465;&#65039;</a>`;
+        <a href="#" onclick='editParty("${p.title}", "${p.series}", "${p.user}", ${JSON.stringify(p.party)}, "${p.comment}")'>&#9999;&#65039;</a>
+        <a href="index.html" onclick="deleteParty()">&#128465;&#65039;</a>`;
       }
       party.innerHTML +=
       `</div>
         <div class="main">
-        <h2><strong>Title: </strong>${data.title}</h2>
-        <p><strong>Series: </strong>${data.series}</p>
-        <p><strong>By: </strong>${data.user}</p>
+        <h2><strong>Title: </strong>${p.title}</h2>
+        <p><strong>Series: </strong>${p.series}</p>
+        <p><strong>By: </strong>${p.user}</p>
         <ul class="poke">
         </ul>
-        <p><strong>Comment: </strong>${data.comment}</p>
+        <p><strong>Comment: </strong>${p.comment}</p>
       </div>`;
-      let pt = JSON.parse(data.party);
-      let poke = document.querySelector(".poke");
+      let pt = JSON.parse(p.party);
+      const poke = document.querySelector(".poke");
       pt.forEach(p => {
         getPokeInfo(POKE_APILINK + p)
         .then(info => {
-            poke.innerHTML += 
-        `<li>
-        <img src=${info[0]} alt="image of ${info[1]}" />
-        <div class="stats">
-          <p><strong>Name: </strong>${info[1]}</p>
-          <p><strong>Type: </strong>${returnString(info[2])}</p>
-          <p><strong>Abilities: </strong>${returnString(info[3])}</p>
-        </div>
-      </li>`;
+          poke.innerHTML += 
+          `<li>
+            <img src=${info[0]} alt="image of ${info[1]}" />
+            <div class="stats">
+              <p><strong>Name: </strong>${info[1]}</p>
+              <p><strong>Type: </strong>${returnString(info[2])}</p>
+              <p><strong>Abilities: </strong>${returnString(info[3])}</p>
+            </div>
+          </li>`;
         });
       });
     });
@@ -140,8 +143,9 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
 
     pt = JSON.stringify(pt);
 
-    fetch(DB_APILINK + partyId + "/" + userId, {
+    fetch(DB_APILINK + partyId, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
@@ -151,8 +155,7 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
             "series": series,
             "user": user,
             "party": pt,
-            "comment": comment,
-            "userId": userId
+            "comment": comment
         })
     })
     .then(res => res.json())
@@ -162,8 +165,9 @@ function saveReview(titleInputId, seriesInputId, userInputId, partyInputId, comm
 }
 
 function deleteParty() {
-    fetch(DB_APILINK + partyId + "/" + userId, {
-        method: 'DELETE'
+    fetch(DB_APILINK + partyId, {
+        method: 'DELETE',
+        credentials: 'include'
     })
     .then(res => res.json())
     .then(res => {

@@ -63,8 +63,8 @@ function login() {
 
     fetch(DB_APILINK + "login", {
         method: "POST",
+        credentials: "include",
         headers: {
-            'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -74,10 +74,11 @@ function login() {
     })
     .then(res => res.json())
     .then(res => {
-        if (res.status === "success") {
-            location.href = `index.html?userId=${res.userId}`;
+        console.log(res);
+        if (res.success) {
+            location.href = "index.html";
         } else {
-            alert("incorrect username or password")
+            alert(res.message);
         }
     })
     .catch(e => alert("failed to connect to server"));
@@ -110,10 +111,10 @@ function createAccount() {
     })
     .then(res => res.json())
     .then(res => {
-        if (res.status === "success") {
+        if (res.success) {
             location.href = "login.html?f=login";
         } else {
-            alert("username already exists")
+            alert(res.message);
         }
     })
     .catch(e => alert("failed to connect to server"));

@@ -9,7 +9,7 @@ export default class PartiesController {
             const user = req.body.user;
             const party = req.body.party; // contains up to 6 pokemon
             const comment = req.body.comment;
-            const userId = req.params.userId;
+            const userId = req.body.userId;
 
             const partyResponse = await PartiesDAO.addParty(
                 title,
@@ -19,23 +19,25 @@ export default class PartiesController {
                 comment,
                 userId
             );
-            res.json({ status: "success"});
+            res.json({ success: true, message: "Successfully create new party"});
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to create new party" });
         }
     }
 
     static async apiGetParty(req, res, next) {
         try {
+            const userId = res.locals.user.userId;
             let partyId = req.params.partyId || {};
             let party = await PartiesDAO.getParty(partyId);
             if (!party) {
-                res.status(404).json({ error: "Not found"});
+                res.status(404).json({ success: false, message: "Party not found" });
                 return;
             }
-            res.json(party);
+            party.success = true;
+            res.json({userId: userId, party: party });
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to retrieve party" });
         }
     }
 
@@ -47,7 +49,7 @@ export default class PartiesController {
             const user = req.body.user;
             const party = req.body.party; // contains up to 6 pokemon
             const comment = req.body.comment;
-            const userId = req.params.userId;
+            const userId = req.body.userId;
             
             const partyResponse = await PartiesDAO.updateParty(
                 partyId,
@@ -58,46 +60,41 @@ export default class PartiesController {
                 comment,
                 userId
             );
-
-            var { error } = partyResponse;
-            if (error) {
-                res.status(400).json({ error });
-            }
-
             // if nothing was modified,
             if (partyResponse.modifiedCount === 0) {
-                throw new Error (
-                    "unable to update review",
-                )
+                throw new Error ("nothing changed")
             }
 
-            res.json({ status: "success" });
+            res.json({ success: true, message: "Successfully update party" });
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to update party" });
         }
     }
     
     static async apiDeleteParty(req, res, next) {
         try {
             const partyId = req.params.partyId;
-            const userId = req.params.userId;
+            const userId = req.body.userId;
             const partyResponse = await PartiesDAO.deleteParty(partyId, userId);
-            res.json({ status: "success" });
+            res.json({ success: true, message: "Successfully deleted party" });
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to delete party" });
         }
     }
 
     static async apiGetAllParties(req, res, next) {
         try {
+            const username = res.locals.user.username;
+            const userId = res.locals.user.userId;
             let parties = await PartiesDAO.getAllParties();
             if (!parties) {
-                res.status(404).json({ error: "Not found"});
+                res.status(404).json({ success: false, message: "not found"});
                 return;
             }
-            res.json(parties);
+            res.json({ success: true,  username: username, userId: userId, parties: parties});
         } catch (e) {
-            res.status(500).json({ error: e });
+            console.log(e);
+            res.status(500).json({ success: false, message: "Failed to retrieve all party" });
         }
     }
 
@@ -108,22 +105,7 @@ export default class PartiesController {
             if (!userInfo) {
                 res.status(400).json({ error: "could not find user"});
             }
-            res.json(userInfo);
-        } catch (e) {
-            res.status(500).json({ error: e.message });
-        }
-    }
-
-    static async apiLogin(req, res, next) {
-        try {
-            const username = req.body.username;
-            const password = req.body.password;
-            const loginRes = await PartiesDAO.login(username, password);
-            if (loginRes) {
-                res.json({ status: "success", accessToken: loginRes[0], userId: loginRes[1] });
-            } else {
-                res.status(400).json({ error: "incorrect username or password" });
-            }
+            res.json({userInfo});
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
@@ -135,31 +117,59 @@ export default class PartiesController {
             const password = req.body.password;
             const createAccountResponse = await PartiesDAO.createAccount(username, password);
             if (createAccountResponse) {
-                res.json({ status: "success" });
+                res.json({ success: true, message: "Successfully create new account" });
             } else {
-                res.status(400).json({ error: "username already exists" });
+                res.status(400).json({ success: false, message: "Username already exists" });
             }
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to create account" });
         }
     }
 
-    static async authenticateToken(req, res, next) {
-        // const userId = req.params.userId;
-        // if (!userId) {
-        //     next();
-        // }
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token == null) {
-            return res.status(401).json({ error: "access denied"});
-        }
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if (err) {
-                return res.status(403).json({ error: "do not have auth"});
+    static async apiLogin(req, res, next) {
+        try {
+            const username = req.body.username;
+            const password = req.body.password;
+            const accessToken = await PartiesDAO.login(username, password);
+            if (accessToken) {
+                res.cookie('access_token', accessToken, { 
+                    httpOnly: true,
+                    maxAge: 14*60*1000,
+                    domain: "localhost",
+                    sameSite: "none",
+                    secure: true
+                });
+                res.json({ success: true, message: "Successfully logged in" });
+            } else {
+                res.status(400).json({ success: false, message: "Incorrect username or password" });
             }
-            req.user = user;
-            next();
-        });
+        } catch (e) {
+            res.status(500).json({ success: false, message: "Failed to login" });
+        }
+    }
+
+    static async apiLogout(req, res, next) {
+        res.clearCookie("access_token");
+        res.status(200),json({ success: true, message: "Successfully logged out"})
+    }
+
+    static async authenticateToken(req, res, next) {
+        try {
+            const accessToken = req.cookies.access_token;
+            if (accessToken == null) {
+                console.error("accessToken not found");
+                return res.status(401).json({ success: false, message: "Access denied" });
+            }
+            jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+                if (err) {
+                    return res.status(403).json({ success: false, message: "Correct authentication required" });
+                }
+                res.locals.user = { userId: user._id, username: user.username, access: user.access };
+                next();
+            });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ success: false, message: "Failed to authenticate user" });
+        }
     }
 }
