@@ -99,9 +99,18 @@ export default class PartiesDAO {
                     _id: doc._id, 
                     username: doc.username, 
                     access: doc.access
-                    };
-                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15min' });
-                return accessToken;
+                };
+                let accessToken;
+                let refreshToken;
+                if (doc.access == "guest") {
+                    accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+                } else if (doc.access == "user") {
+                    accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+                    refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+                } else if (doc.access == "admin") {
+                    accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+                }
+                return { accessToken: accessToken, refreshToken: refreshToken, access: doc.access};
             } else {
                 console.log("wrong password");
                 return;

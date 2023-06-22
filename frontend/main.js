@@ -22,72 +22,81 @@ function returnParties(url) {
   .then(data => {
     console.log(data);
     if (!data.success) {
-      header.innerHTML = 
-      `<a href="index.html"><h1>PokeChamp</h1></a>
-      <div class="login">
-      <p> Logged in as: Guest</p>
-      <a href="login.html?f=login"><button>Login</button></a>
-      </div>`;
-      newParty.innerHTML =
-      `<p style="text-align: center;color: red"> ${data.message}<br>Please log in</p>`;
+      location.href = "login.html?f=login";
+      // header.innerHTML = 
+      // `<a href="index.html"><h1>PokeChamp</h1></a>
+      // <div class="login">
+      // <p> Logged in as: Guest</p>
+      // <a href="login.html?f=login"><button>Login</button></a>
+      // </div>`;
+      // newParty.innerHTML =
+      // `<p style="text-align: center;color: red"> ${data.message}<br>Please log in</p>`;
       return;
     }
     header.innerHTML += 
       `<a href="index.html"><h1>PokeChamp</h1></a>
       <div class="login">
       <p> Logged in as: ${data.username}</p>
-      <a href="index.html"><button id="logout">Logout</button></a>
+      <a href="login.html?f=login"><button id="logout">Logout</button></a>
       </div>`
     const logout = document.getElementById("logout");
-    logout.onclick = logout;
+    logout.onclick = logOut;
 
-    newParty.innerHTML = 
-    `<div class="navbar">
-      <p>
-        Use PokeChamp to see what party other pokemon trainers used to beat
-        the champion! Share your party by filling out the form below and
-        pressing "Create Post"!
-      </p>
-      <div class="new-post">
+    if (data.access !== "guest") {
+      newParty.innerHTML = 
+      `<div class="navbar">
         <p>
-          <strong>Title: </strong>
-          <input type="text" id="newTitle" placeholder="New Party" />
+          Use PokeChamp to see what party other pokemon trainers used to beat
+          the champion! Share your party by filling out the form below and
+          pressing "Create Post"!
         </p>
-        <p>
-          <strong>Series: </strong>
-          <input type="text" id="newSeries" placeholder="Diamond" />
-        </p>
-        <p>
-          <strong>By: </strong>
-          <input type="text" id="newUser" placeholder="Username" />
-        </p>
-        <p>
-          <strong>Party: </strong>
-          <input
-            type="text"
-            id="newParty"
-            oninput="this.size = this.value.length + 1"
-            placeholder="pikachu,charizard,mewtwo"
-          />
-        </p>
-        <p>
-          <strong>Comment: </strong>
-          <input
-            type="text"
-            id="newComment"
-            oninput="this.size = this.value.length"
-            placeholder="I love this party!"
-          />
-        </p>
-        <button id="create-button" onclick="createParty()">Create Post</button>
-      </div>
-    </div>`;
-    const createButton = document.getElementById("create-button");
-    createButton.addEventListener("click", () => {createParty(data.userId);});
+        <div class="new-post">
+          <p>
+            <strong>Title: </strong>
+            <input type="text" id="newTitle" placeholder="New Party" />
+          </p>
+          <p>
+            <strong>Series: </strong>
+            <input type="text" id="newSeries" placeholder="Diamond" />
+          </p>
+          <p>
+            <strong>By: </strong>
+            <input type="text" id="newUser" placeholder="Username" />
+          </p>
+          <p>
+            <strong>Party: </strong>
+            <input
+              type="text"
+              id="newParty"
+              oninput="this.size = this.value.length + 1"
+              placeholder="pikachu,charizard,mewtwo"
+            />
+          </p>
+          <p>
+            <strong>Comment: </strong>
+            <input
+              type="text"
+              id="newComment"
+              oninput="this.size = this.value.length"
+              placeholder="I love this party!"
+            />
+          </p>
+          <button id="create-button" onclick="createParty()">Create Post</button>
+        </div>
+      </div>`;
+      const createButton = document.getElementById("create-button");
+      createButton.addEventListener("click", () => {createParty(data.userId);});
+    } else {
+      newParty.innerHTML = 
+      `<div class="navbar">
+        <p style="color:red;text-align:center">Login to create and share your own party!</p>
+      </div>`
+    }
+    
 
     posts.innerHTML += `<button id="refresh">Refresh</button>`;
     const refresh = document.getElementById("refresh");
-        refresh.onclick = refresh;
+    refresh.onclick = refreshPage;
 
     data.parties.forEach(element => {
       let party = JSON.parse(element.party);
@@ -167,15 +176,41 @@ function createParty(userId) {
         "comment": comment,
         "userId": userId
     })
-})
-.then(res => res.json())
-.then(res => {
-    location.reload();
-});
+  })
+  .then(res => res.json())
+  .then(res => {
+      location.reload();
+  });
 }
 
-function logout() {
-  location.href = login.js;
+function refresh() {
+  fetch(DB_APILINK + "refresh", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(res => {
+    location.reload();
+  });
+}
+
+function logOut() {
+  console.log('here');
+  fetch(DB_APILINK + "logout", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(res => {
+    console.log(res);
+    location.href = 'login.html'
+  });
 }
 
 function refreshPage() {

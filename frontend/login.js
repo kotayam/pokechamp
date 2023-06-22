@@ -20,12 +20,17 @@ window.onload = function() {
         <div class="function-box">
           <button id="login-button">Login</button>
           <p>or</p>
-          <a href="login.html?f=create-account">Create new account</a>
+          <p>Don't have an account?</p>
+          <a href="login.html?f=create-account"><button>Create new account</button></a>
+          <p>or</p>
+          <a href="index.html" id="guest-login">Continue as guest</a>
         </div>
-        <a href="index.html">return to home</a>
+        </div>
       </div>`
       const loginButton = document.getElementById("login-button");
-      loginButton.onclick = login;
+      loginButton.addEventListener('click', () => {login("user")});
+      const guestLogin = document.getElementById("guest-login");
+      guestLogin.addEventListener('click', () => {login()});
     }
     else if (foo === "create-account") {
         acc.innerHTML = 
@@ -52,15 +57,21 @@ window.onload = function() {
     }
 }
 
-function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    if (!(username && password)) {
-        alert("please fill out everything");
-        return;
+function login(access="") {
+    let username;
+    let password;
+    if (access) {
+        username = document.getElementById("username").value;
+        password = document.getElementById("password").value;
+        if (!(username && password)) {
+            alert("please fill out everything");
+            return;
+        }
+    } else {
+        username = "guest";
+        password = "guest";
     }
-
+    
     fetch(DB_APILINK + "login", {
         method: "POST",
         credentials: "include",

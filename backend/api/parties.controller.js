@@ -86,12 +86,13 @@ export default class PartiesController {
         try {
             const username = res.locals.user.username;
             const userId = res.locals.user.userId;
+            const access = res.locals.user.access;
             let parties = await PartiesDAO.getAllParties();
             if (!parties) {
                 res.status(404).json({ success: false, message: "not found"});
                 return;
             }
-            res.json({ success: true,  username: username, userId: userId, parties: parties});
+            res.json({ success: true,  username: username, userId: userId, access: access, parties: parties});
         } catch (e) {
             console.log(e);
             res.status(500).json({ success: false, message: "Failed to retrieve all party" });
@@ -130,27 +131,84 @@ export default class PartiesController {
         try {
             const username = req.body.username;
             const password = req.body.password;
-            const accessToken = await PartiesDAO.login(username, password);
-            if (accessToken) {
-                res.cookie('access_token', accessToken, { 
-                    httpOnly: true,
-                    maxAge: 14*60*1000,
-                    domain: "localhost",
-                    sameSite: "none",
-                    secure: true
-                });
+            const tokens = await PartiesDAO.login(username, password);
+            if (tokens) {
+                const { accessToken, refreshToken, access } = tokens;
+                console.log(access);
+                if (access == "guest") {
+                    res.cookie('access_token', accessToken, { 
+                        httpOnly: true,
+                        maxAge: 15*60*1000,
+                        domain: "localhost",
+                        sameSite: "none",
+                        secure: true
+                    });
+                } else if (access == "user") {
+                    res.cookie('access_token', accessToken, { 
+                        httpOnly: true,
+                        maxAge: 15*60*1000,
+                        domain: "localhost",
+                        sameSite: "none",
+                        secure: true
+                    });
+                    res.cookie('refresh_token', refreshToken, { 
+                        httpOnly: true,
+                        domain: "localhost",
+                        sameSite: "none",
+                        secure: true
+                    });
+                } else if (access == "admin") {
+                    res.cookie('access_token', accessToken, { 
+                        httpOnly: true,
+                        domain: "localhost",
+                        sameSite: "none",
+                        secure: true
+                    });
+                }
                 res.json({ success: true, message: "Successfully logged in" });
             } else {
                 res.status(400).json({ success: false, message: "Incorrect username or password" });
             }
         } catch (e) {
+            console.error(e);
             res.status(500).json({ success: false, message: "Failed to login" });
         }
     }
 
+    static async apiRefresh(req, res, next) {
+        const refreshToken = req.cookies.refresh_token;
+        if (refreshToken == null) {
+            res.status(401).json({success: false, message: "Couldn't refresh token"})
+        }
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.status(403).json({ success: false, message: "Invalid refresh token" });
+            }
+            const accessToken = jwt.sign({ _id: user._id, username: user.username, access: user.access }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+            res.cookie('access_token', accessToken, { 
+                httpOnly: true,
+                maxAge: 14*60*1000,
+                domain: "localhost",
+                sameSite: "none",
+                secure: true
+            });
+        });
+    }
+
     static async apiLogout(req, res, next) {
-        res.clearCookie("access_token");
-        res.status(200),json({ success: true, message: "Successfully logged out"})
+        res.clearCookie("access_token", { 
+            httpOnly: true,
+            domain: "localhost",
+            sameSite: "none",
+            secure: true 
+        });
+        res.clearCookie("refresh_token", { 
+            httpOnly: true,
+            domain: "localhost",
+            sameSite: "none",
+            secure: true 
+        });
+        res.json({ success: true, message: "Successfully logged out"})
     }
 
     static async authenticateToken(req, res, next) {

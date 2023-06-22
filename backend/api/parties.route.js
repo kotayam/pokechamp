@@ -21,6 +21,9 @@ router.route("/create-account")
 router.route("/login")
     .post(PartiesCtrl.apiLogin);
 
+router.route("/refresh")
+    .post(PartiesCtrl.authenticateToken, PartiesCtrl.apiRefresh);
+
 router.route("/logout")
     .post(PartiesCtrl.authenticateToken, PartiesCtrl.apiLogout);
     
