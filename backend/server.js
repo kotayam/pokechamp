@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 const corsOptions = {
-    "origin": ["pokechamp.heppoko.space", "http://127.0.0.1:5500"],
+    "origin": ["https://pokechamp.heppoko.space", "http://127.0.0.1:5500"],
     "credentials": true
 }
 
