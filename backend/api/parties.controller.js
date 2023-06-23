@@ -28,14 +28,14 @@ export default class PartiesController {
     static async apiGetParty(req, res, next) {
         try {
             const userId = res.locals.user.userId;
+            const access = res.locals.user.access;
             let partyId = req.params.partyId || {};
             let party = await PartiesDAO.getParty(partyId);
             if (!party) {
                 res.status(404).json({ success: false, message: "Party not found" });
                 return;
             }
-            party.success = true;
-            res.json({userId: userId, party: party });
+            res.json({ success: true, userId: userId, access: access, party: party });
         } catch (e) {
             res.status(500).json({ success: false, message: "Failed to retrieve party" });
         }
@@ -135,18 +135,10 @@ export default class PartiesController {
             if (tokens) {
                 const { accessToken, refreshToken, access } = tokens;
                 console.log(access);
-                if (access == "guest") {
+                if (access == "user" || access == "guest") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
-                        maxAge: 15*60*1000,
-                        domain: "localhost",
-                        sameSite: "none",
-                        secure: true
-                    });
-                } else if (access == "user") {
-                    res.cookie('access_token', accessToken, { 
-                        httpOnly: true,
-                        maxAge: 15*60*1000,
+                        maxAge: 14*60*1000,
                         domain: "localhost",
                         sameSite: "none",
                         secure: true
@@ -157,7 +149,8 @@ export default class PartiesController {
                         sameSite: "none",
                         secure: true
                     });
-                } else if (access == "admin") {
+                } 
+                else if (access == "admin") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
                         domain: "localhost",
@@ -176,6 +169,7 @@ export default class PartiesController {
     }
 
     static async apiRefresh(req, res, next) {
+        console.log(req);
         const refreshToken = req.cookies.refresh_token;
         if (refreshToken == null) {
             res.status(401).json({success: false, message: "Couldn't refresh token"})
@@ -192,6 +186,7 @@ export default class PartiesController {
                 sameSite: "none",
                 secure: true
             });
+            res.json({ success: true, message: "Session extended" });
         });
     }
 
@@ -214,9 +209,15 @@ export default class PartiesController {
     static async authenticateToken(req, res, next) {
         try {
             const accessToken = req.cookies.access_token;
+            const refreshToken = req.cookies.refresh_token;
             if (accessToken == null) {
-                console.error("accessToken not found");
-                return res.status(401).json({ success: false, message: "Access denied" });
+                if (refreshToken == null) {
+                    console.error("accessToken and refreshToken not found");
+                    return res.status(401).json({ success: false, refresh: false, message: "Access denied" });
+                } else {
+                    console.error("need to refresh token");
+                    return res.json({ success: false, refresh: true, message: "refresh token"});
+                }
             }
             jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
                 if (err) {

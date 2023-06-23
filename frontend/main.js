@@ -1,5 +1,3 @@
-const url = new URL(location.href);
-
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
@@ -22,16 +20,28 @@ function returnParties(url) {
   .then(data => {
     console.log(data);
     if (!data.success) {
-      location.href = "login.html?f=login";
-      // header.innerHTML = 
-      // `<a href="index.html"><h1>PokeChamp</h1></a>
-      // <div class="login">
-      // <p> Logged in as: Guest</p>
-      // <a href="login.html?f=login"><button>Login</button></a>
-      // </div>`;
-      // newParty.innerHTML =
-      // `<p style="text-align: center;color: red"> ${data.message}<br>Please log in</p>`;
-      return;
+      if (data.refresh) {
+        header.innerHTML += 
+          `<a href="index.html"><h1>PokeChamp</h1></a>
+          <div class="login">
+          <a href="login.html?f=login"><button id="logout">Logout</button></a>
+          </div>`
+        const logout = document.getElementById("logout");
+        logout.onclick = logOut;
+
+        newParty.innerHTML += 
+        `<div style="text-align:center">
+        <p style="color:red">Session is about to expire.<br>Press "Extend" to keep browsing or "Logout" to end session.</p>
+        <button id="extend">Extend</button>
+        </div>`;
+        const extendButton = document.getElementById("extend");
+        extendButton.addEventListener('click', refreshAccess);
+
+        return;
+      } else {
+        location.href = "login.html?f=login";
+        return;
+      }
     }
     header.innerHTML += 
       `<a href="index.html"><h1>PokeChamp</h1></a>
@@ -92,7 +102,6 @@ function returnParties(url) {
         <p style="color:red;text-align:center">Login to create and share your own party!</p>
       </div>`
     }
-    
 
     posts.innerHTML += `<button id="refresh">Refresh</button>`;
     const refresh = document.getElementById("refresh");
@@ -123,11 +132,7 @@ function returnParties(url) {
   .catch (e => {
     console.log(e);
     header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>
-    <div class="login">
-    <p> Logged in as: Guest</p>
-    <a href="login.html?f=login"><button>Login</button></a>
-    </div>`;
+    `<a href="index.html"><h1>PokeChamp</h1></a>`;
     newParty.innerHTML =
     `<p style="text-align: center;color: red"> Failed to connect to server </p>`;
   });
@@ -183,7 +188,7 @@ function createParty(userId) {
   });
 }
 
-function refresh() {
+function refreshAccess() {
   fetch(DB_APILINK + "refresh", {
     method: "POST",
     credentials: "include",
@@ -193,6 +198,7 @@ function refresh() {
   })
   .then(res => res.json())
   .then(res => {
+    console.log(res);
     location.reload();
   });
 }

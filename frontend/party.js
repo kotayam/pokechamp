@@ -27,7 +27,7 @@ function returnParty(url) {
     .then(res => res.json())
     .then(data => {
       const p = data.party;
-      if (data.userId === p.userId) {
+      if (data.userId === p.userId || data.access == "admin") {
         party.innerHTML += 
         `<div class="toolbar">
         <a href="#" onclick='editParty("${p.title}", "${p.series}", "${p.user}", ${JSON.stringify(p.party)}, "${p.comment}")'>&#9999;&#65039;</a>
