@@ -3,7 +3,7 @@ const url = new URL(location.href);
 const partyId = url.searchParams.get("partyId");
 
 // backend api
-const DB_APILINK = 'https://pokechamp.onrender.com/api/v1/pokechamp/';
+const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';

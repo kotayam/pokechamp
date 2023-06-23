@@ -1,7 +1,7 @@
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
-const DB_APILINK = 'https://pokechamp.onrender.com/api/v1/pokechamp/';
+const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 
 window.onload = function() {
   returnParties(DB_APILINK + `home`);
