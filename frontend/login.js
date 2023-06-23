@@ -1,4 +1,4 @@
-const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
+const DB_APILINK = 'https://pokechamp.onrender.com/api/v1/pokechamp/';
 
 window.onload = function() {
     const url = new URL(location.href);
