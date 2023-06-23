@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 const corsOptions = {
-    "origin": "http://127.0.0.1:5500",
+    "origin": ["https://serene-kelpie-27ec92.netlify.app", "http://127.0.0.1:5500"],
     "credentials": true
 }
 

@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const uri = process.env.MONGO_URI;
-const port = process.env.PROD_PORT;
+const port = process.env.PORT || 8000;
 
 mongoose.connect(
     uri,

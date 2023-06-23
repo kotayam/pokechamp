@@ -1,0 +1,1 @@
+PokeChamp allows pokemon trainers to share their parties they beat the champion with.
