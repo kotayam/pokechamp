@@ -66,7 +66,7 @@ export default class PartiesDAO {
 
     static async getAllParties() {
         try {
-            const cursor = await Party.find().cursor();
+            const cursor = await Party.find();
             console.log(cursor);
             return cursor.toArray();
         } catch (e) {

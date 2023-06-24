@@ -26,6 +26,7 @@ function returnParty(url) {
     })
     .then(res => res.json())
     .then(data => {
+      console.log(data);
       const p = data.party;
       if (data.userId === p.userId || data.access == "admin") {
         party.innerHTML += 

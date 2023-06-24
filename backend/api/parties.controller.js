@@ -135,7 +135,7 @@ export default class PartiesController {
             if (tokens) {
                 const { accessToken, refreshToken, access } = tokens;
                 console.log(access);
-                if (access == "user" || access == "guest") {
+                if (access === "user" || access === "guest") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
                         maxAge: 14*60*1000,
@@ -150,7 +150,7 @@ export default class PartiesController {
                         secure: true
                     });
                 } 
-                else if (access == "admin") {
+                else if (access === "admin") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
                         domain: "heppoko.space",

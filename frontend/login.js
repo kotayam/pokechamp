@@ -71,6 +71,8 @@ function login(access="") {
         username = "guest";
         password = "guest";
     }
+    console.log(username);
+    console.log(password);
     
     fetch(DB_APILINK + "login", {
         method: "POST",
@@ -87,7 +89,7 @@ function login(access="") {
     .then(res => {
         console.log(res);
         if (res.success) {
-            // location.href = "index.html";
+            location.href = "index.html";
         } else {
             alert(res.message);
         }
