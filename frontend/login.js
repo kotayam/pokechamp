@@ -87,7 +87,7 @@ function login(access="") {
     .then(res => {
         console.log(res);
         if (res.success) {
-            location.href = "index.html";
+            // location.href = "index.html";
         } else {
             alert(res.message);
         }
