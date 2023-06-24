@@ -66,7 +66,8 @@ export default class PartiesDAO {
 
     static async getAllParties() {
         try {
-            const cursor = Party.find().cursor();
+            const cursor = await Party.find().cursor();
+            console.log(cursor);
             return cursor.toArray();
         } catch (e) {
             console.error(`Unable to get all parties: ${e}`);
