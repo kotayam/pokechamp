@@ -107,7 +107,8 @@ function returnParties(url) {
     const refresh = document.getElementById("refresh");
     refresh.onclick = refreshPage;
 
-    data.parties.forEach(element => {
+    const parties = data.parties;
+    parties.forEach(element => {
       let party = JSON.parse(element.party);
       getPokeIMG(POKE_APILINK + party[0])
       .then(pokeImg => {
