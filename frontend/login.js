@@ -1,10 +1,11 @@
-const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
+// const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
+const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 window.onload = function() {
     const url = new URL(location.href);
     const foo = url.searchParams.get("f");
 
-    let acc = document.getElementById("account");
+    const acc = document.getElementById("account");
 
     if (foo === "login") {
         acc.innerHTML = 
@@ -23,7 +24,7 @@ window.onload = function() {
           <p>Don't have an account?</p>
           <a href="login.html?f=create-account"><button>Create new account</button></a>
           <p>or</p>
-          <a href="index.html" id="guest-login">Continue as guest</a>
+          <a href="#" id="guest-login">Continue as guest</a>
         </div>
         </div>
       </div>`
@@ -71,8 +72,6 @@ function login(access="") {
         username = "guest";
         password = "guest";
     }
-    console.log(username);
-    console.log(password);
     
     fetch(DB_APILINK + "login", {
         method: "POST",
@@ -87,14 +86,26 @@ function login(access="") {
     })
     .then(res => res.json())
     .then(res => {
-        console.log(res);
         if (res.success) {
             location.href = "index.html";
         } else {
             alert(res.message);
         }
     })
-    .catch(e => alert("failed to connect to server"));
+    .catch(e => {
+        console.error(e); 
+        header.innerHTML = 
+        `<a href="index.html"><h1>PokeChamp</h1></a>`;
+        acc.innerHTML =
+        `<div style="max-width:700px;margin:0 auto;text-align:center">
+            <div class="head-text">
+                <p style="color:red">
+                Failed to create party.
+                </p>
+                <a href="index.html">return to home</a>
+            </div>
+        </div>`
+    });
 }
 
 function createAccount() {
@@ -130,5 +141,18 @@ function createAccount() {
             alert(res.message);
         }
     })
-    .catch(e => alert("failed to connect to server"));
+    .catch(e => {
+        console.error(e); 
+        header.innerHTML = 
+        `<a href="index.html"><h1>PokeChamp</h1></a>`;
+        acc.innerHTML =
+        `<div style="max-width:700px;margin:0 auto;text-align:center">
+            <div class="head-text">
+                <p style="color:red">
+                Failed to create account.
+                </p>
+                <a href="index.html">return to home</a>
+            </div>
+        </div>`
+    });
 }

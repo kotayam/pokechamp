@@ -104,7 +104,7 @@ export default class PartiesDAO {
                 let refreshToken;
                 if (doc.access == "guest" || doc.access == "user") {
                     accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-                    refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+                    refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
                 } 
                 else if (doc.access == "admin") {
                     accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);

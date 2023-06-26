@@ -1,7 +1,8 @@
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
-const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
+// const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
+const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 window.onload = function() {
   returnParties(DB_APILINK + `home`);
@@ -11,14 +12,13 @@ function returnParties(url) {
   const header = document.querySelector(".header");
   const newParty = document.getElementById("new-party");
   const posts = document.getElementById("posts");
-  
+
   fetch(url, {
     method: "GET",
     credentials: 'include'
   })
   .then(res => res.json())
   .then(data => {
-    console.log(data);
     if (!data.success) {
       if (data.refresh) {
         header.innerHTML += 
@@ -30,9 +30,13 @@ function returnParties(url) {
         logout.onclick = logOut;
 
         newParty.innerHTML += 
-        `<div style="text-align:center">
-        <p style="color:red">Session is about to expire.<br>Press "Extend" to keep browsing or "Logout" to end session.</p>
-        <button id="extend">Extend</button>
+        `<div style="max-width:700px;margin:0 auto;text-align:center">
+          <div class="head-text">
+            <p style="color:red">
+            Session is about to expire.<br>Press "Extend" to keep browsing or "Logout" to end session.
+            </p>
+            <button id="extend">Extend</button>
+          </div>
         </div>`;
         const extendButton = document.getElementById("extend");
         extendButton.addEventListener('click', refreshAccess);
@@ -55,11 +59,13 @@ function returnParties(url) {
     if (data.access !== "guest") {
       newParty.innerHTML = 
       `<div class="navbar">
-        <p>
-          Use PokeChamp to see what party other pokemon trainers used to beat
-          the champion! Share your party by filling out the form below and
-          pressing "Create Post"!
-        </p>
+        <div class="head-text">
+          <p>
+            Welcome to PokeChamp! Use PokeChamp to see what party other pokemon trainers used to beat
+            the champion! Share your party by filling out the form below and
+            pressing "Create Post"!
+          </p>
+        </div>
         <div class="new-post">
           <p>
             <strong>Title: </strong>
@@ -75,12 +81,38 @@ function returnParties(url) {
           </p>
           <p>
             <strong>Party: </strong>
-            <input
-              type="text"
-              id="newParty"
-              oninput="this.size = this.value.length + 1"
-              placeholder="pikachu,charizard,mewtwo"
-            />
+            <div class="newParty">
+              <input
+                type="text"
+                id="poke1"
+                placeholder="pokemon 1"
+              />
+              <input
+                type="text"
+                id="poke2"
+                placeholder="pokemon 2"
+              />
+              <input
+                type="text"
+                id="poke3"
+                placeholder="pokemon 3"
+              />
+              <input
+                type="text"
+                id="poke4"
+                placeholder="pokemon 4"
+              />
+              <input
+                type="text"
+                id="poke5"
+                placeholder="pokemon 5"
+              />
+              <input
+                type="text"
+                id="poke6"
+                placeholder="pokemon 6"
+              />
+            </div>
           </p>
           <p>
             <strong>Comment: </strong>
@@ -97,10 +129,16 @@ function returnParties(url) {
       const createButton = document.getElementById("create-button");
       createButton.addEventListener("click", () => {createParty(data.userId);});
     } else {
+      newParty.style.borderBottom = "1px solid";
+      newParty.style.padding = "0.5rem";
       newParty.innerHTML = 
-      `<div class="navbar">
-        <p style="color:red;text-align:center">Login to create and share your own party!</p>
-      </div>`
+      `<div style="max-width:700px;margin:0 auto;text-align:center">
+          <div class="head-text">
+            <p style="color:red">
+            Login to create and share your own party!
+            </p>
+          </div>
+        </div>`
     }
 
     posts.innerHTML += `<button id="refresh">Refresh</button>`;
@@ -131,11 +169,18 @@ function returnParties(url) {
     });
   })
   .catch (e => {
-    console.log(e);
+    console.error(e);
     header.innerHTML = 
     `<a href="index.html"><h1>PokeChamp</h1></a>`;
     newParty.innerHTML =
-    `<p style="text-align: center;color: red"> Failed to connect to server </p>`;
+    `<div style="max-width:700px;margin:0 auto;text-align:center">
+        <div class="head-text">
+          <p style="color:red">
+          Failed to load page.
+          </p>
+          <a href="index.html">return to home</a>
+        </div>
+      </div>`
   });
 }
 
@@ -153,15 +198,18 @@ function createParty(userId) {
   const title = document.getElementById("newTitle").value;
   const series = document.getElementById("newSeries").value;
   const user = document.getElementById("newUser").value;
-  let party = document.getElementById("newParty").value.toLowerCase().split(",");
   const comment = document.getElementById("newComment").value;
-
-  if (!(title && series && user && party && comment)) {
-    alert("please fill out everything");
-    return;
+  let party = [];
+  for (let i = 1; i < 7; i++) {
+    let pokeNum = "poke" + i;
+    let poke = document.getElementById(pokeNum).value.trim().toLowerCase();
+    if (poke) {
+      party.push(poke);
+    }
   }
-  if (party.length > 6) {
-    alert("party can contain max 6 pokemon");
+
+  if (!(title && series && user && comment && party.length > 0)) {
+    alert("please fill out everything");
     return;
   }
 
@@ -185,7 +233,28 @@ function createParty(userId) {
   })
   .then(res => res.json())
   .then(res => {
-      location.reload();
+    if (!res.success) {
+      if (res.refresh) {
+        location.reload();
+      } else {
+        throw new Error("failed to save party");
+      }
+    }
+    location.reload();
+  })
+  .catch (e => {
+    console.error(e);
+    header.innerHTML = 
+    `<a href="index.html"><h1>PokeChamp</h1></a>`;
+    newParty.innerHTML =
+    `<div style="max-width:700px;margin:0 auto;text-align:center">
+        <div class="head-text">
+          <p style="color:red">
+          Failed to create party.
+          </p>
+          <a href="index.html">return to home</a>
+        </div>
+      </div>`
   });
 }
 
@@ -199,13 +268,25 @@ function refreshAccess() {
   })
   .then(res => res.json())
   .then(res => {
-    console.log(res);
     location.reload();
+  })
+  .catch (e => {
+    console.error(e);
+    header.innerHTML = 
+    `<a href="index.html"><h1>PokeChamp</h1></a>`;
+    newParty.innerHTML =
+    `<div style="max-width:700px;margin:0 auto;text-align:center">
+        <div class="head-text">
+          <p style="color:red">
+          Failed to extend session.
+          </p>
+          <a href="index.html">return to home</a>
+        </div>
+      </div>`
   });
 }
 
 function logOut() {
-  console.log('here');
   fetch(DB_APILINK + "logout", {
     method: "POST",
     credentials: "include",
@@ -215,8 +296,21 @@ function logOut() {
   })
   .then(res => res.json())
   .then(res => {
-    console.log(res);
-    location.href = 'login.html'
+
+  })
+  .catch (e => {
+    console.error(e);
+    header.innerHTML = 
+    `<a href="index.html"><h1>PokeChamp</h1></a>`;
+    newParty.innerHTML =
+    `<div style="max-width:700px;margin:0 auto;text-align:center">
+        <div class="head-text">
+          <p style="color:red">
+          Failed to log out.
+          </p>
+          <a href="index.html">return to home</a>
+        </div>
+      </div>`
   });
 }
 

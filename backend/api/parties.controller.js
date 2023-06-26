@@ -9,7 +9,7 @@ export default class PartiesController {
             const user = req.body.user;
             const party = req.body.party; // contains up to 6 pokemon
             const comment = req.body.comment;
-            const userId = req.body.userId;
+            const userId = res.locals.user.userId;
 
             const partyResponse = await PartiesDAO.addParty(
                 title,
@@ -60,10 +60,6 @@ export default class PartiesController {
                 comment,
                 userId
             );
-            // if nothing was modified,
-            if (partyResponse.modifiedCount === 0) {
-                throw new Error ("nothing changed")
-            }
 
             res.json({ success: true, message: "Successfully update party" });
         } catch (e) {
@@ -139,13 +135,14 @@ export default class PartiesController {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
                         maxAge: 14*60*1000,
-                        domain: "heppoko.space",
+                        // domain: "heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
                     res.cookie('refresh_token', refreshToken, { 
                         httpOnly: true,
-                        domain: "heppoko.space",
+                        maxAge: 7*24*60*60*1000,
+                        // domain: ".heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
@@ -153,7 +150,7 @@ export default class PartiesController {
                 else if (access === "admin") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
-                        domain: "heppoko.space",
+                        // domain: ".heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
@@ -169,7 +166,6 @@ export default class PartiesController {
     }
 
     static async apiRefresh(req, res, next) {
-        console.log(req);
         const refreshToken = req.cookies.refresh_token;
         if (refreshToken == null) {
             res.status(401).json({success: false, message: "Couldn't refresh token"})
@@ -182,7 +178,7 @@ export default class PartiesController {
             res.cookie('access_token', accessToken, { 
                 httpOnly: true,
                 maxAge: 14*60*1000,
-                domain: "heppoko.space",
+                // domain: ".heppoko.space",
                 sameSite: "none",
                 secure: true
             });
@@ -193,13 +189,13 @@ export default class PartiesController {
     static async apiLogout(req, res, next) {
         res.clearCookie("access_token", { 
             httpOnly: true,
-            domain: "heppoko.space",
+            // domain: ".heppoko.space",
             sameSite: "none",
             secure: true 
         });
         res.clearCookie("refresh_token", { 
             httpOnly: true,
-            domain: "heppoko.space",
+            // domain: ".heppoko.space",
             sameSite: "none",
             secure: true 
         });
