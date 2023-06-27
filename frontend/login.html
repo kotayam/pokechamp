@@ -14,6 +14,60 @@
     </div>
 
     <section id="account">
+      <div class="error-box" style="display: none">
+        <div class="head-text">
+          <p class="error-message" style="color: red"></p>
+          <a href="login.html?f=login">return to login page</a>
+        </div>
+      </div>
+
+      <div class="login-box" style="display: none">
+        <div class="username-box">
+          <p>Username:</p>
+          <input id="login-username" type="text" placeholder="Username" />
+        </div>
+        <div class="password-box">
+          <p>Password:</p>
+          <input id="login-password" type="password" placeholder="Password" />
+        </div>
+        <div class="function-box">
+          <button class="login-button">Login</button>
+          <p>or</p>
+          <p>Don't have an account?</p>
+          <a href="login.html?f=create-account"
+            ><button>Create new account</button></a
+          >
+          <p>or</p>
+          <a href="#" class="guest-login"
+            >Continue as guest</a
+          >
+        </div>
+      </div>
+
+      <div class="create-account-box" style="display: none">
+        <div class="username-box">
+          <p>New Username:</p>
+          <input id="create-username" type="text" placeholder="New username" />
+        </div>
+        <div class="password-box">
+          <p>New Password:</p>
+          <input id="create-password" type="password" placeholder="New password" />
+        </div>
+        <div class="confirm-password-box">
+          <p>Confirm Password:</p>
+          <input
+            id="create-confirm-password"
+            type="password"
+            placeholder="Confirm password"
+          />
+        </div>
+        <div class="function-box">
+          <button class="create-account-button">
+            Create Account
+          </button>
+        </div>
+        <a href="login.html?f=login">return to login page</a>
+      </div>
     </section>
   </body>
 </html>

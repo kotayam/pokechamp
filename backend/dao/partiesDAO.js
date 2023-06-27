@@ -111,7 +111,7 @@ export default class PartiesDAO {
                 }
                 return { accessToken: accessToken, refreshToken: refreshToken, access: doc.access};
             } else {
-                console.log("wrong password");
+                console.error("wrong password");
                 return;
             }
         } catch (e) {

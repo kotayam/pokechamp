@@ -9,9 +9,15 @@ window.onload = function() {
 }
 
 function returnParties(url) {
-  const header = document.querySelector(".header");
-  const newParty = document.getElementById("new-party");
-  const posts = document.getElementById("posts");
+  const accountHeader = document.querySelector(".account");
+  const accountText = document.querySelector("#account-text");
+  const extendBox = document.querySelector(".extend-box");
+  const newPartyContainer = document.querySelector(".new-party-container");
+  const createButton = document.querySelector("#create-button");
+  const guestLoginBox = document.querySelector(".guest-login-box");
+  const posts = document.querySelector("#posts");
+  const errorBox = document.querySelector(".error-box");
+  const errorText = document.querySelector(".error-message");
 
   fetch(url, {
     method: "GET",
@@ -21,129 +27,28 @@ function returnParties(url) {
   .then(data => {
     if (!data.success) {
       if (data.refresh) {
-        header.innerHTML += 
-          `<a href="index.html"><h1>PokeChamp</h1></a>
-          <div class="login">
-          <a href="login.html?f=login"><button id="logout">Logout</button></a>
-          </div>`
-        const logout = document.getElementById("logout");
-        logout.onclick = logOut;
-
-        newParty.innerHTML += 
-        `<div style="max-width:700px;margin:0 auto;text-align:center">
-          <div class="head-text">
-            <p style="color:red">
-            Session is about to expire.<br>Press "Extend" to keep browsing or "Logout" to end session.
-            </p>
-            <button id="extend">Extend</button>
-          </div>
-        </div>`;
-        const extendButton = document.getElementById("extend");
-        extendButton.addEventListener('click', refreshAccess);
-
+        extendBox.style.display = "block";
+        const logoutButton = document.querySelector(".logout-button");
+        logoutButton.addEventListener('click', () => {logout()});
+        const extendButton = document.querySelector("#extend-button");
+        extendButton.addEventListener('click', () => {refreshAccess()});
         return;
       } else {
         location.href = "login.html?f=login";
         return;
       }
     }
-    header.innerHTML += 
-      `<a href="index.html"><h1>PokeChamp</h1></a>
-      <div class="login">
-      <p> Logged in as: ${data.username}</p>
-      <a href="login.html?f=login"><button id="logout">Logout</button></a>
-      </div>`
-    const logout = document.getElementById("logout");
-    logout.onclick = logOut;
+    accountHeader.style.display = "block";
+    accountText.innerText = `Logged in as: ${data.username}`;
+    const logoutButton = document.querySelector(".logout-button");
+    logoutButton.addEventListener('click', () => {logout()});
 
     if (data.access !== "guest") {
-      newParty.innerHTML = 
-      `<div class="navbar">
-        <div class="head-text">
-          <p>
-            Welcome to PokeChamp! Use PokeChamp to see what party other pokemon trainers used to beat
-            the champion! Share your party by filling out the form below and
-            pressing "Create Post"!
-          </p>
-        </div>
-        <div class="new-post">
-          <p>
-            <strong>Title: </strong>
-            <input type="text" id="newTitle" placeholder="New Party" />
-          </p>
-          <p>
-            <strong>Series: </strong>
-            <input type="text" id="newSeries" placeholder="Diamond" />
-          </p>
-          <p>
-            <strong>By: </strong>
-            <input type="text" id="newUser" placeholder="Username" />
-          </p>
-          <p>
-            <strong>Party: </strong>
-            <div class="newParty">
-              <input
-                type="text"
-                id="poke1"
-                placeholder="pokemon 1"
-              />
-              <input
-                type="text"
-                id="poke2"
-                placeholder="pokemon 2"
-              />
-              <input
-                type="text"
-                id="poke3"
-                placeholder="pokemon 3"
-              />
-              <input
-                type="text"
-                id="poke4"
-                placeholder="pokemon 4"
-              />
-              <input
-                type="text"
-                id="poke5"
-                placeholder="pokemon 5"
-              />
-              <input
-                type="text"
-                id="poke6"
-                placeholder="pokemon 6"
-              />
-            </div>
-          </p>
-          <p>
-            <strong>Comment: </strong>
-            <input
-              type="text"
-              id="newComment"
-              oninput="this.size = this.value.length"
-              placeholder="I love this party!"
-            />
-          </p>
-          <button id="create-button" onclick="createParty()">Create Post</button>
-        </div>
-      </div>`;
-      const createButton = document.getElementById("create-button");
-      createButton.addEventListener("click", () => {createParty(data.userId);});
+      newPartyContainer.style.display = "block";
+      createButton.addEventListener("click", () => {createParty(data.userId)});
     } else {
-      newParty.style.borderBottom = "1px solid";
-      newParty.style.padding = "0.5rem";
-      newParty.innerHTML = 
-      `<div style="max-width:700px;margin:0 auto;text-align:center">
-          <div class="head-text">
-            <p style="color:red">
-            Login to create and share your own party!
-            </p>
-          </div>
-        </div>`
+      guestLoginBox.style.display = "block";
     }
-
-    posts.innerHTML += `<button id="refresh">Refresh</button>`;
-    const refresh = document.getElementById("refresh");
-    refresh.onclick = refreshPage;
 
     const parties = data.parties;
     parties.forEach(element => {
@@ -170,17 +75,8 @@ function returnParties(url) {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    newParty.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to load page.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    errorBox.style.display = "block";
+    errorText.innerText = "Failed to load home page."
   });
 }
 
@@ -244,17 +140,10 @@ function createParty(userId) {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    newParty.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to create party.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    const errorBox = document.querySelector(".error-box");
+    const errorText = document.querySelector(".error-message");
+    errorBox.style.display = "block";
+    errorText.innerText = "Failed to create party.";
   });
 }
 
@@ -272,21 +161,14 @@ function refreshAccess() {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    newParty.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to extend session.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    const errorBox = document.querySelector(".error-box");
+    const errorText = document.querySelector(".error-message");
+    errorBox.style.display = "block";
+    errorText.innerText = "Failed to extend session.";
   });
 }
 
-function logOut() {
+function logout() {
   fetch(DB_APILINK + "logout", {
     method: "POST",
     credentials: "include",
@@ -296,25 +178,17 @@ function logOut() {
   })
   .then(res => res.json())
   .then(res => {
-
+    if (res.success) {
+      location.href = "login.html?f=login";
+    } else {
+      throw new Error("failed to logout");
+    }
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    newParty.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to log out.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    const errorBox = document.querySelector(".error-box");
+    const errorText = document.querySelector(".error-message");
+    errorBox.style.display = "block";
+    errorText.innerText = "Failed to log out.";
   });
 }
-
-function refreshPage() {
-  location.reload();
-}
-

@@ -10,14 +10,110 @@
   </head>
   <body>
     <div class="header">
+      <a href="index.html"><h1>PokeChamp</h1></a>
+      <div class="account" style="display:none">
+        <p id="account-text"></p>
+        <button class="logout-button">Logout</button>
+        <button id="account-button">Account</button>
+      </div>
     </div>
 
     <div class="main-container">
-      <section id="new-party">
-      </section>
+      <div class="extend-box" style="display:none">
+        <div class="head-text">
+          <p style="color: red">
+            Session is about to expire.<br />Press "Extend" to keep browsing or
+            "Logout" to end session.
+          </p>
+          <button id="extend-button">Extend</button>
+          <button class="logout-button">Logout</button>
+        </div>
+      </div>
 
-      <section id="posts">
+      <div class="error-box" style="display: none">
+        <div class="head-text">
+          <p class="error-message" style="color: red"></p>
+          <a href="index.html">return to home</a>
+        </div>
+      </div>
+
+      <section id="new-party">
+
+        <div class="guest-login-box" style="display: none">
+          <div class="head-text">
+            <p class="guest-login-message" style="color: red">Login to create and share your own party!</p>
+          </div>
+        </div>
+
+        <div class="new-party-container" style="display:none">
+          <div class="intro-text">
+            <p>
+              Welcome to PokeChamp! Use PokeChamp to see what party other pokemon trainers used to beat
+              the champion! Share your party by filling out the form below and
+              pressing "Create Post"!
+            </p>
+          </div>
+          <div class="new-post">
+            <p>
+              <strong>Title: </strong>
+              <input type="text" id="newTitle" placeholder="New Party" />
+            </p>
+            <p>
+              <strong>Series: </strong>
+              <input type="text" id="newSeries" placeholder="Diamond" />
+            </p>
+            <p>
+              <strong>By: </strong>
+              <input type="text" id="newUser" placeholder="Username" />
+            </p>
+            <p>
+              <strong>Party: </strong>
+              <div class="newParty">
+                <input
+                  type="text"
+                  id="poke1"
+                  placeholder="pokemon 1"
+                />
+                <input
+                  type="text"
+                  id="poke2"
+                  placeholder="pokemon 2"
+                />
+                <input
+                  type="text"
+                  id="poke3"
+                  placeholder="pokemon 3"
+                />
+                <input
+                  type="text"
+                  id="poke4"
+                  placeholder="pokemon 4"
+                />
+                <input
+                  type="text"
+                  id="poke5"
+                  placeholder="pokemon 5"
+                />
+                <input
+                  type="text"
+                  id="poke6"
+                  placeholder="pokemon 6"
+                />
+              </div>
+            </p>
+            <p>
+              <strong>Comment: </strong>
+              <input
+                type="text"
+                id="newComment"
+                placeholder="I love this party!"
+              />
+            </p>
+            <button id="create-button" onclick="createParty()">Create Post</button>
+          </div>
+        </div>
       </section>
+      <section id="posts"></section>
     </div>
   </body>
 </html>

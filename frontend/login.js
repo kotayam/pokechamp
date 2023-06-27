@@ -5,56 +5,26 @@ window.onload = function() {
     const url = new URL(location.href);
     const foo = url.searchParams.get("f");
 
-    const acc = document.getElementById("account");
+    const loginButton = document.querySelector(".login-button");
+    loginButton.addEventListener('click', () => {login('user')});
+    const guestLogin = document.querySelector(".guest-login");
+    guestLogin.addEventListener('click', () => {login()});
+    const createAccButton = document.querySelector(".create-account-button");
+    createAccButton.addEventListener('click', () => {createAccount()});
+
+    const loginBox = document.querySelector(".login-box");
+    const createAccBox = document.querySelector(".create-account-box");
+    const errorBox = document.querySelector(".error-box");
 
     if (foo === "login") {
-        acc.innerHTML = 
-        `<div class="login-box">
-        <div class="username-box">
-          <p>Username:</p>
-          <input id="username" type="text" placeholder="Username" />
-        </div>
-        <div class="password-box">
-          <p>Password:</p>
-          <input id="password" type="password" placeholder="Password" />
-        </div>
-        <div class="function-box">
-          <button id="login-button">Login</button>
-          <p>or</p>
-          <p>Don't have an account?</p>
-          <a href="login.html?f=create-account"><button>Create new account</button></a>
-          <p>or</p>
-          <a href="#" id="guest-login">Continue as guest</a>
-        </div>
-        </div>
-      </div>`
-      const loginButton = document.getElementById("login-button");
-      loginButton.addEventListener('click', () => {login("user")});
-      const guestLogin = document.getElementById("guest-login");
-      guestLogin.addEventListener('click', () => {login()});
+        loginBox.style.display = "block";
+        createAccBox.style.display = "none";
+        errorBox.style.display = "none";
     }
     else if (foo === "create-account") {
-        acc.innerHTML = 
-        `<div class="login-box">
-        <div class="username-box">
-          <p>New Username:</p>
-          <input id="username" type="text" placeholder="New username" />
-        </div>
-        <div class="password-box">
-          <p>New Password:</p>
-          <input id="password" type="password" placeholder="New password" />
-        </div>
-        <div class="confirm-password-box">
-          <p>Confirm Password:</p>
-          <input id="confirm-password" type="password" placeholder="Confirm password" />
-        </div>
-        <div class="function-box">
-          <button id="create-account-button">Create Account</button>
-        </div>
-        <a href="index.html">return to home</a>
-      </div>`
-      const createAccButton = document.getElementById("create-account-button");
-      createAccButton.onclick = createAccount;
+        loginBox.style.display = "none";
+        createAccBox.style.display = "block";
+        errorBox.style.display = "none";
     }
 }
 
@@ -62,8 +32,8 @@ function login(access="") {
     let username;
     let password;
     if (access) {
-        username = document.getElementById("username").value;
-        password = document.getElementById("password").value;
+        username = document.getElementById("login-username").value;
+        password = document.getElementById("login-password").value;
         if (!(username && password)) {
             alert("please fill out everything");
             return;
@@ -94,24 +64,20 @@ function login(access="") {
     })
     .catch(e => {
         console.error(e); 
-        header.innerHTML = 
-        `<a href="index.html"><h1>PokeChamp</h1></a>`;
-        acc.innerHTML =
-        `<div style="max-width:700px;margin:0 auto;text-align:center">
-            <div class="head-text">
-                <p style="color:red">
-                Failed to create party.
-                </p>
-                <a href="index.html">return to home</a>
-            </div>
-        </div>`
+        const loginBox = document.querySelector(".login-box");
+        const errorBox = document.querySelector(".error-box");
+        const errText = document.querySelector(".error-message");
+        loginBox.style.display = "none";
+        errorBox.style.display = "block";
+        errText.innerText = "Failed to login."
     });
 }
 
 function createAccount() {
-    const newUsername = document.getElementById("username").value;
-    const newPass = document.getElementById("password").value;
-    const confirmPass = document.getElementById("confirm-password").value;
+    const newUsername = document.getElementById("create-username").value;
+    const newPass = document.getElementById("create-password").value;
+    const confirmPass = document.getElementById("create-confirm-password").value;
+    console.log(newUsername + newPass + confirmPass);
 
     if (!(newUsername && newPass && confirmPass)) {
         alert("Please fill out everything");
@@ -143,16 +109,11 @@ function createAccount() {
     })
     .catch(e => {
         console.error(e); 
-        header.innerHTML = 
-        `<a href="index.html"><h1>PokeChamp</h1></a>`;
-        acc.innerHTML =
-        `<div style="max-width:700px;margin:0 auto;text-align:center">
-            <div class="head-text">
-                <p style="color:red">
-                Failed to create account.
-                </p>
-                <a href="index.html">return to home</a>
-            </div>
-        </div>`
+        const createAccBox = document.querySelector(".create-account-box");
+        const errorBox = document.querySelector(".error-box");
+        const errText = document.querySelector(".error-message");
+        createAccBox.style.display = "none";
+        errorBox.style.display = "block";
+        errText.innerText = "Failed to create new account."
     });
 }

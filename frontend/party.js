@@ -14,8 +14,13 @@ window.onload = function() {
 }
 
 function returnParty(url) {
-  const header = document.querySelector(".header");
-  const party = document.getElementById("party");
+  const partyContainer = document.querySelector(".party-container");
+  const toolbar = document.querySelector(".toolbar");
+  const editButton = document.getElementById("edit-button");
+  const deleteButton = document.getElementById("delete-button");
+  const mainParty = document.querySelector(".main-party");
+  const errorBox = document.querySelector(".error-box");
+  const errText = document.querySelector(".error-message");
 
   fetch(url, {
     method: "GET",
@@ -27,20 +32,20 @@ function returnParty(url) {
     if (!data.success) {
       location.href = "index.html";
     }
-
-    header.innerHTML += 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
+    partyContainer.style.display = "block";
 
     const p = data.party;
     if (data.userId === p.userId || data.access == "admin") {
-      party.innerHTML += 
-      `<div class="toolbar">
-      <a href="#" onclick='editParty("${p.title}", "${p.series}", "${p.user}", ${JSON.stringify(p.party)}, "${p.comment}")'>&#9999;&#65039;</a>
-      <a href="index.html" onclick="deleteParty()">&#128465;&#65039;</a>`;
+      toolbar.style.display = "block";
+      editButton.style.display = "inline-block";
+      editButton.addEventListener('click', () => {editParty(p.title, p.series, p.user, JSON.parse(p.party), p.comment)});
+      deleteButton.style.display = "inline-block";
+      deleteButton.addEventListener('click', () => {deleteParty()});
     }
-    party.innerHTML +=
-    `</div>
-      <div class="main">
+
+    mainParty.style.display = "block";
+    mainParty.innerHTML +=
+    `<div class="main">
       <h2><strong>Title: </strong>${p.title}</h2>
       <p><strong>Series: </strong>${p.series}</p>
       <p><strong>By: </strong>${p.user}</p>
@@ -67,17 +72,10 @@ function returnParty(url) {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    newParty.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to load party.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    toolbar.style.display = "none";
+    mainParty.style.display = "none";
+    errorBox.style.display = "block";
+    errText.innerText = "Failed to load party.";
   });
     
     
@@ -115,20 +113,25 @@ function returnString(arr) {
 }
 
 function editParty(title, series, user, pt, comment) {
-  const p = JSON.parse(pt);
-
-  const party = document.getElementById("party");
-
   const titleInputId = "title" + partyId;
   const seriesInputId = "series" + partyId;
   const userInputId = "user" + partyId;
   const commentInputId = "comment" + partyId;
 
-  party.innerHTML = 
-  `<div class="toolbar">
-  <a href="#" onclick="saveReview('${titleInputId}', '${seriesInputId}', '${userInputId}', '${commentInputId}')">&#128190;</a>
-  </div>
-  <div class="main">
+  const editButton = document.getElementById("edit-button");
+  const deleteButton = document.getElementById("delete-button");
+  const saveButton = document.getElementById("save-button");
+  const cancelButton = document.getElementById("cancel-button");
+  editButton.style.display = "none";
+  deleteButton.style.display = "none";
+  saveButton.style.display = "inline-block";
+  saveButton.addEventListener('click', () => {saveReview(titleInputId, seriesInputId, userInputId, commentInputId)})
+  cancelButton.style.display = "inline-block";
+  cancelButton.addEventListener('click', () => {location.href = `party.html?partyId=${partyId}`});
+
+  const mainParty = document.querySelector(".main-party");
+  mainParty.innerHTML = 
+  `<div class="main">
     <h2><strong>Title: </strong>
     <input type="text" id='${titleInputId}' value='${title}'>
     </h2>
@@ -140,12 +143,12 @@ function editParty(title, series, user, pt, comment) {
     </p>
     <p><strong>Party: </strong>
       <div class="newParty">
-        <input type="text" id="poke1" value='${p[0] || ""}'/>
-        <input type="text" id="poke2" value='${p[1] || ""}'/>
-        <input type="text" id="poke3" value='${p[2] || ""}'/>
-        <input type="text" id="poke4" value='${p[3] || ""}'/>
-        <input type="text" id="poke5" value='${p[4] || ""}'/>
-        <input type="text" id="poke6" value='${p[5] || ""}'/>
+        <input type="text" id="poke1" value='${pt[0] || ""}'/>
+        <input type="text" id="poke2" value='${pt[1] || ""}'/>
+        <input type="text" id="poke3" value='${pt[2] || ""}'/>
+        <input type="text" id="poke4" value='${pt[3] || ""}'/>
+        <input type="text" id="poke5" value='${pt[4] || ""}'/>
+        <input type="text" id="poke6" value='${pt[5] || ""}'/>
       </div>
     </p>
     <p><strong>Comment: </strong>
@@ -154,14 +157,10 @@ function editParty(title, series, user, pt, comment) {
 }
 
 function saveReview(titleInputId, seriesInputId, userInputId, commentInputId) {
-  const header = document.querySelector(".header");
-  const party = document.getElementById("party");
-
   const title = document.getElementById(titleInputId).value;
   const series = document.getElementById(seriesInputId).value;
   const user = document.getElementById(userInputId).value;
   const comment = document.getElementById(commentInputId).value;
-
   let pt = [];
   for (let i = 1; i < 7; i++) {
     let pokeNum = "poke" + i;
@@ -170,12 +169,10 @@ function saveReview(titleInputId, seriesInputId, userInputId, commentInputId) {
       pt.push(poke);
     }
   }
-
   if (!(title && series && user &&  comment && pt.length > 0)) {
       alert("please fill out everything");
       return;
   }
-
   pt = JSON.stringify(pt);
 
   fetch(DB_APILINK + partyId, {
@@ -207,24 +204,16 @@ function saveReview(titleInputId, seriesInputId, userInputId, commentInputId) {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    party.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to save update.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    const partyContainer = document.querySelector(".party-container");
+    const errorBox = document.querySelector(".error-box");
+    const errText = document.querySelector(".error-message");
+    partyContainer.style.display = "none";
+    errorBox.style.display = "block";
+    errText.innerText = "Failed to save update.";
   });
 }
 
 function deleteParty() {
-  const header = document.querySelector(".header");
-  const party = document.getElementById("party");
-
   fetch(DB_APILINK + partyId, {
       method: 'DELETE',
       credentials: 'include'
@@ -242,16 +231,11 @@ function deleteParty() {
   })
   .catch (e => {
     console.error(e);
-    header.innerHTML = 
-    `<a href="index.html"><h1>PokeChamp</h1></a>`;
-    party.innerHTML =
-    `<div style="max-width:700px;margin:0 auto;text-align:center">
-        <div class="head-text">
-          <p style="color:red">
-          Failed to delete party.
-          </p>
-          <a href="index.html">return to home</a>
-        </div>
-      </div>`
+    const partyContainer = document.querySelector(".party-container");
+    const errorBox = document.querySelector(".error-box");
+    const errText = document.querySelector(".error-message");
+    partyContainer.style.display = "none";
+    errorBox.style.display = "block";
+    errText.innerText = "Failed to delete party.";
   });
 }

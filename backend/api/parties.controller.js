@@ -90,7 +90,7 @@ export default class PartiesController {
             }
             res.json({ success: true,  username: username, userId: userId, access: access, parties: parties});
         } catch (e) {
-            console.log(e);
+            console.error(e);
             res.status(500).json({ success: false, message: "Failed to retrieve all party" });
         }
     }
@@ -130,7 +130,6 @@ export default class PartiesController {
             const tokens = await PartiesDAO.login(username, password);
             if (tokens) {
                 const { accessToken, refreshToken, access } = tokens;
-                console.log(access);
                 if (access === "user" || access === "guest") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
