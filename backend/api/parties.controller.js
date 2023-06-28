@@ -134,14 +134,14 @@ export default class PartiesController {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
                         maxAge: 14*60*1000,
-                        // domain: "heppoko.space",
+                        domain: ".heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
                     res.cookie('refresh_token', refreshToken, { 
                         httpOnly: true,
                         maxAge: 7*24*60*60*1000,
-                        // domain: ".heppoko.space",
+                        domain: ".heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
@@ -149,7 +149,7 @@ export default class PartiesController {
                 else if (access === "admin") {
                     res.cookie('access_token', accessToken, { 
                         httpOnly: true,
-                        // domain: ".heppoko.space",
+                        domain: ".heppoko.space",
                         sameSite: "none",
                         secure: true
                     });
@@ -177,7 +177,7 @@ export default class PartiesController {
             res.cookie('access_token', accessToken, { 
                 httpOnly: true,
                 maxAge: 14*60*1000,
-                // domain: ".heppoko.space",
+                domain: ".heppoko.space",
                 sameSite: "none",
                 secure: true
             });
@@ -188,13 +188,13 @@ export default class PartiesController {
     static async apiLogout(req, res, next) {
         res.clearCookie("access_token", { 
             httpOnly: true,
-            // domain: ".heppoko.space",
+            domain: ".heppoko.space",
             sameSite: "none",
             secure: true 
         });
         res.clearCookie("refresh_token", { 
             httpOnly: true,
-            // domain: ".heppoko.space",
+            domain: ".heppoko.space",
             sameSite: "none",
             secure: true 
         });

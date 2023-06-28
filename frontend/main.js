@@ -1,14 +1,17 @@
 // poke api
 const POKE_APILINK = 'https://pokeapi.co/api/v2/pokemon/';
 // backend
-// const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
-const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
+const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
+// const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 window.onload = function() {
   returnParties(DB_APILINK + `home`);
 }
 
 function returnParties(url) {
+  const logoutButton = document.querySelector(".logout-button");
+  const extendButton = document.querySelector("#extend-button");
+  const accountButton = document.querySelector("#account-button");
   const accountHeader = document.querySelector(".account");
   const accountText = document.querySelector("#account-text");
   const extendBox = document.querySelector(".extend-box");
@@ -28,9 +31,7 @@ function returnParties(url) {
     if (!data.success) {
       if (data.refresh) {
         extendBox.style.display = "block";
-        const logoutButton = document.querySelector(".logout-button");
         logoutButton.addEventListener('click', () => {logout()});
-        const extendButton = document.querySelector("#extend-button");
         extendButton.addEventListener('click', () => {refreshAccess()});
         return;
       } else {
@@ -40,8 +41,8 @@ function returnParties(url) {
     }
     accountHeader.style.display = "block";
     accountText.innerText = `Logged in as: ${data.username}`;
-    const logoutButton = document.querySelector(".logout-button");
     logoutButton.addEventListener('click', () => {logout()});
+    accountButton.addEventListener('click', () => {location.href = "account.html"});
 
     if (data.access !== "guest") {
       newPartyContainer.style.display = "block";
