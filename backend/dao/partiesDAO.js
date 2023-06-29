@@ -67,14 +67,14 @@ export default class PartiesDAO {
         }
     }
 
-    static async deleteParty(partyId, userId) {
+    static async deleteParty(partyId) {
         try {
-            const deleteResponse = await Party.findOneAndDelete({ _id: new ObjectId(partyId) });
-            if (deleteResponse) {
-                const acc = await Account.findOne({ _id: userId });
+            const deleteRes = await Party.findOneAndDelete({ _id: new ObjectId(partyId) });
+            if (deleteRes) {
+                const acc = await Account.findOne({ _id: deleteRes.userId });
                 if (acc) {
                     let parties = acc.parties;
-                    let idx = parties.indexOf(deleteResponse._id.toString());
+                    let idx = parties.indexOf(deleteRes._id.toString());
                     if (idx > -1) {
                         parties.splice(idx, 1);
                     }

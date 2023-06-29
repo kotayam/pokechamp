@@ -19,6 +19,7 @@ export default class PartiesController {
                 comment,
                 userId
             );
+            console.log("Successfully create new party");
             res.json({ success: true, message: "Successfully create new party"});
         } catch (e) {
             res.status(500).json({ success: false, message: "Failed to create new party" });
@@ -60,8 +61,8 @@ export default class PartiesController {
                 comment,
                 userId
             );
-
-            res.json({ success: true, message: "Successfully update party" });
+            console.log("Successfully updated party")
+            res.json({ success: true, message: "Successfully updated party" });
         } catch (e) {
             res.status(500).json({ success: false, message: "Failed to update party" });
         }
@@ -70,8 +71,8 @@ export default class PartiesController {
     static async apiDeleteParty(req, res, next) {
         try {
             const partyId = req.params.partyId;
-            const userId = res.locals.user.userId;
-            const partyResponse = await PartiesDAO.deleteParty(partyId, userId);
+            const partyResponse = await PartiesDAO.deleteParty(partyId);
+            console.log("Successfully deleted party");
             res.json({ success: true, message: "Successfully deleted party" });
         } catch (e) {
             res.status(500).json({ success: false, message: "Failed to delete party" });
@@ -116,6 +117,7 @@ export default class PartiesController {
             if (!deleteRes) {
                 res.status(400).json({ success: false, message: "Could not find account to delete" });
             }
+            console.log("Successfully deleted account.");
             res.json({ success: true, message: "Successfully deleted account."});
         } catch (e) {
             res.status(500).json({ success: false, message: "Failed to delete account."});
