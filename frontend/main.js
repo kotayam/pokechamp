@@ -6,6 +6,8 @@ const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 
 window.onload = function() {
   returnParties(DB_APILINK + `home`);
+  const footer = document.querySelector("#footer");
+  footer.style.display = "block";
 }
 
 function returnParties(url) {

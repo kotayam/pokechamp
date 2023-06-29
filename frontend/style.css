@@ -111,6 +111,10 @@ body {
     white-space: nowrap;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 .thumbnail {
     float: left;
     width: 75px;
@@ -195,6 +199,8 @@ body {
 .toolbar a {
     text-decoration: none;
     background-color: rgb(219, 219, 219);
+    margin-right: 4px;
+    margin-left: 4px;
 }
 
 #party .main {

@@ -104,6 +104,7 @@ export default class PartiesController {
             }
             res.json({ success: true, username: userInfo.username, userId: userInfo.userId, access: userInfo.access, numParty: userInfo.numParty, parties: userInfo.parties });
         } catch (e) {
+            console.error(e);
             res.status(500).json({ success: false, message: "Failed to retrieve account info" });
         }
     }

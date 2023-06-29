@@ -227,7 +227,7 @@ function deleteParty() {
         throw new Error("failed to delete party");
       }
     }
-    location.reload();
+    location.href = "index.html";
   })
   .catch (e => {
     console.error(e);
