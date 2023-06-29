@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="pokemon" />
+    <title>PokeChamp</title>
+    <link rel="icon" type="image/jpg" href="/frontend/img/quickball.jpg" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script src="account.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <a href="index.html"><h1>PokeChamp</h1></a>
+    </div>
+
+    <div class="error-box" style="display: none">
+      <div class="head-text">
+        <p class="error-message" style="color: red"></p>
+        <a href="index.html">return to home page</a>
+      </div>
+    </div>
+
+    <div class="account-container" style="display: none">
+      <div class="toolbar">
+        <a id="home-button" href="index.html">&#127968;</a>
+        <a id="cancel-button" style="display:none;float:right" href="#">&#10060;</a>
+      </div>
+
+      <div class="account-info" style="padding: 10px;">
+        <p id="account-username" style="margin-bottom: 4px;"></p>
+        <p id="account-numparty" style="margin-bottom: 4px;"></p>
+        <p id="account-parties" style="padding-bottom: 10px;border-bottom:1px solid;"></p>
+        <button
+          id="account-delete-button"
+          style="margin-top:10px;padding:2px;font-size:1rem;color:red"
+        >
+          delete account
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

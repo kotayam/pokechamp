@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="pokemon">
     <title>PokeChamp</title>
+    <link rel="icon" type="image/jpg" href="/frontend/img/quickball.jpg"/>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="main.js" type="module"></script>
   </head>
@@ -13,7 +15,7 @@
       <a href="index.html"><h1>PokeChamp</h1></a>
       <div class="account" style="display:none">
         <p id="account-text"></p>
-        <button class="logout-button">Logout</button>
+        <button id="logout-button">Logout</button>
         <button id="account-button">Account</button>
       </div>
     </div>
@@ -22,11 +24,9 @@
       <div class="extend-box" style="display:none">
         <div class="head-text">
           <p style="color: red">
-            Session is about to expire.<br />Press "Extend" to keep browsing or
-            "Logout" to end session.
+            Session is about to expire.<br />Press "Extend" to keep browsing.
           </p>
           <button id="extend-button">Extend</button>
-          <button class="logout-button">Logout</button>
         </div>
       </div>
 
@@ -114,6 +114,11 @@
         </div>
       </section>
       <section id="posts"></section>
+      <section id="footer">
+        <div id="contact-box">
+          
+        </div>
+      </section>
     </div>
   </body>
 </html>

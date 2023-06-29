@@ -9,7 +9,7 @@ window.onload = function() {
 }
 
 function returnParties(url) {
-  const logoutButton = document.querySelector(".logout-button");
+  const logoutButton = document.querySelector("#logout-button");
   const extendButton = document.querySelector("#extend-button");
   const accountButton = document.querySelector("#account-button");
   const accountHeader = document.querySelector(".account");
@@ -31,7 +31,6 @@ function returnParties(url) {
     if (!data.success) {
       if (data.refresh) {
         extendBox.style.display = "block";
-        logoutButton.addEventListener('click', () => {logout()});
         extendButton.addEventListener('click', () => {refreshAccess()});
         return;
       } else {
@@ -39,8 +38,12 @@ function returnParties(url) {
         return;
       }
     }
+    if (data.access === "admin") {
+      accountText.innerText = `Logged in as: Admin`;
+    } else {
+      accountText.innerText = `Logged in as: ${data.username}`;
+    }
     accountHeader.style.display = "block";
-    accountText.innerText = `Logged in as: ${data.username}`;
     logoutButton.addEventListener('click', () => {logout()});
     accountButton.addEventListener('click', () => {location.href = "account.html"});
 
@@ -60,13 +63,13 @@ function returnParties(url) {
         `<a href="party.html?partyId=${element._id}">
           <div class="row">
             <div class="col">
-            <div class="card">
-              <div class="thumbnail-container">
-                <img class="thumbnail" src="${pokeImg}" alt="img of ${party[0]}" />
-              </div>
-              <p class="title"><strong>Title: </strong>${element.title}</p>
-              <p class="series"><strong>Series: </strong>${element.series}</p>
-              <p class="username"><strong>By: </strong>${element.user}</p>
+              <div class="card">
+                <div class="thumbnail-container">
+                  <img class="thumbnail" src="${pokeImg}" alt="img of ${party[0]}" />
+                </div>
+                <p class="title" style=""><strong>Title: </strong>${element.title}</p>
+                <p class="series"><strong>Series: </strong>${element.series}</p>
+                <p class="username"><strong>By: </strong>${element.user}</p>
               </div>
             </div>
           </div>

@@ -5,16 +5,17 @@ window.onload = function() {
     const url = new URL(location.href);
     const foo = url.searchParams.get("f");
 
-    const loginButton = document.querySelector(".login-button");
-    loginButton.addEventListener('click', () => {login('user')});
-    const guestLogin = document.querySelector(".guest-login");
-    guestLogin.addEventListener('click', () => {login()});
-    const createAccButton = document.querySelector(".create-account-button");
-    createAccButton.addEventListener('click', () => {createAccount()});
-
     const loginBox = document.querySelector(".login-box");
     const createAccBox = document.querySelector(".create-account-box");
     const errorBox = document.querySelector(".error-box");
+    const loginButton = document.querySelector("#login-button");
+    const guestLogin = document.querySelector(".guest-login");
+    const createAccButton = document.querySelector(".create-account-button");
+    const cancelButton = document.querySelector("#cancel-button");
+
+    loginButton.addEventListener('click', () => {login('user')});
+    guestLogin.addEventListener('click', () => {login()});
+    createAccButton.addEventListener('click', () => {createAccount()});
 
     if (foo === "login") {
         loginBox.style.display = "block";
@@ -25,6 +26,7 @@ window.onload = function() {
         loginBox.style.display = "none";
         createAccBox.style.display = "block";
         errorBox.style.display = "none";
+        cancelButton.style.display = "inline-block";
     }
 }
 

@@ -89,24 +89,26 @@ body {
     padding: 2px;
 }
 
-#posts button {
-    margin: 5px;
-    padding: 2px;
-}
-
 .col {
     float: left;
-    width: 380px;
+    width: 363px;
     padding: 10px;
 }
 
 .card {
+    height: 75px;
     background-color: rgb(240, 205, 10);
     border-radius: 19px;
     padding: 15px;
     color: black;
     font-size: 1.4rem;
     text-align: left;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.card p {
+    white-space: nowrap;
 }
 
 .thumbnail {
@@ -129,15 +131,18 @@ body {
     text-align: center;
 }
 
-.login-box, .create-account-box {
+.login-container {
+    font-size: 1.5rem;
     max-width: 500px;
     margin: 0 auto;
     margin-top: 4rem;
-    background: beige;
-    padding: 1rem;
-    font-size: 1.5rem;
-    text-align: center;
+    background-color: beige;
     border: 1px solid;
+}
+
+.login-box, .create-account-box, .account-info {
+    text-align: center;
+    padding: 5px;
 }
 
 .login-box input, .create-account-box input {
@@ -172,7 +177,7 @@ body {
     margin: 2px;
 }
 
-.party-container {
+.party-container, .account-container {
     font-size: 1.5rem;
     max-width: 700px;
     margin: 0 auto;
@@ -184,7 +189,6 @@ body {
 .toolbar {
     background-color: rgb(219, 219, 219);
     border-bottom: 1px solid;
-    text-align: right;
     padding: 0.2rem;
 }
 

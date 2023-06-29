@@ -33,10 +33,10 @@ function returnParty(url) {
       location.href = "index.html";
     }
     partyContainer.style.display = "block";
+    toolbar.style.display = "block";
 
     const p = data.party;
     if (data.userId === p.userId || data.access == "admin") {
-      toolbar.style.display = "block";
       editButton.style.display = "inline-block";
       editButton.addEventListener('click', () => {editParty(p.title, p.series, p.user, JSON.parse(p.party), p.comment)});
       deleteButton.style.display = "inline-block";

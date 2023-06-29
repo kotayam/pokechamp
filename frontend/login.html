@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="pokemon">
     <title>PokeChamp</title>
+    <link rel="icon" type="image/jpg" href="/frontend/img/quickball.jpg"/>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="login.js" type="module"></script>
   </head>
@@ -21,52 +23,58 @@
         </div>
       </div>
 
-      <div class="login-box" style="display: none">
-        <div class="username-box">
-          <p>Username:</p>
-          <input id="login-username" type="text" placeholder="Username" />
+      <div class="login-container">
+        <div class="toolbar">
+          <a id="home-button" href="index.html">&#127968;</a>
+          <a id="cancel-button" style="display:none;float:right;" href="login.html?f=login">&#10060;</a>
         </div>
-        <div class="password-box">
-          <p>Password:</p>
-          <input id="login-password" type="password" placeholder="Password" />
-        </div>
-        <div class="function-box">
-          <button class="login-button">Login</button>
-          <p>or</p>
-          <p>Don't have an account?</p>
-          <a href="login.html?f=create-account"
-            ><button>Create new account</button></a
-          >
-          <p>or</p>
-          <a href="#" class="guest-login"
-            >Continue as guest</a
-          >
-        </div>
-      </div>
 
-      <div class="create-account-box" style="display: none">
-        <div class="username-box">
-          <p>New Username:</p>
-          <input id="create-username" type="text" placeholder="New username" />
+        <div class="login-box" style="display: none">
+          <div class="username-box">
+            <p>Username:</p>
+            <input id="login-username" type="text" placeholder="Username" />
+          </div>
+          <div class="password-box">
+            <p>Password:</p>
+            <input id="login-password" type="password" placeholder="Password" />
+          </div>
+          <div class="function-box">
+            <button id="login-button">Login</button>
+            <p>or</p>
+            <p>Don't have an account?</p>
+            <a href="login.html?f=create-account"
+              ><button>Create new account</button></a
+            >
+            <p>or</p>
+            <a href="#" class="guest-login"
+              >Continue as guest</a
+            >
+          </div>
         </div>
-        <div class="password-box">
-          <p>New Password:</p>
-          <input id="create-password" type="password" placeholder="New password" />
+
+        <div class="create-account-box" style="display: none">
+          <div class="username-box">
+            <p>New Username:</p>
+            <input id="create-username" type="text" placeholder="New username" />
+          </div>
+          <div class="password-box">
+            <p>New Password:</p>
+            <input id="create-password" type="password" placeholder="New password" />
+          </div>
+          <div class="confirm-password-box">
+            <p>Confirm Password:</p>
+            <input
+              id="create-confirm-password"
+              type="password"
+              placeholder="Confirm password"
+            />
+          </div>
+          <div class="function-box">
+            <button class="create-account-button">
+              Create Account
+            </button>
+          </div>
         </div>
-        <div class="confirm-password-box">
-          <p>Confirm Password:</p>
-          <input
-            id="create-confirm-password"
-            type="password"
-            placeholder="Confirm password"
-          />
-        </div>
-        <div class="function-box">
-          <button class="create-account-button">
-            Create Account
-          </button>
-        </div>
-        <a href="login.html?f=login">return to login page</a>
       </div>
     </section>
   </body>

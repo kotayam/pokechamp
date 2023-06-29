@@ -12,8 +12,9 @@ router.route("/home")
     .get(PartiesCtrl.authenticateToken, PartiesCtrl.apiGetAllParties)
     .post(PartiesCtrl.authenticateToken, PartiesCtrl.apiPostParty);
 
-router.route("/user")
-    .get(PartiesCtrl.apiGetUserInfo);
+router.route("/account")
+    .get(PartiesCtrl.authenticateToken, PartiesCtrl.apiGetAccountInfo)
+    .delete(PartiesCtrl.authenticateToken, PartiesCtrl.apiDeleteAccount);
 
 router.route("/create-account")
     .post(PartiesCtrl.apiCreateAccount);

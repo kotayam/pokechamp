@@ -14,7 +14,9 @@ const partySchema = new mongoose.Schema({
 const accountSchema = new mongoose.Schema({
     username: String,
     password: String,
-    access: String
+    access: String,
+    numParty: Number,
+    parties: [{type: String}]
 });
 
 // model creation

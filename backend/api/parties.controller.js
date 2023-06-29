@@ -70,7 +70,7 @@ export default class PartiesController {
     static async apiDeleteParty(req, res, next) {
         try {
             const partyId = req.params.partyId;
-            const userId = req.body.userId;
+            const userId = res.locals.user.userId;
             const partyResponse = await PartiesDAO.deleteParty(partyId, userId);
             res.json({ success: true, message: "Successfully deleted party" });
         } catch (e) {
@@ -95,16 +95,29 @@ export default class PartiesController {
         }
     }
 
-    static async apiGetUserInfo(req, res, next) {
+    static async apiGetAccountInfo(req, res, next) {
         try {
-            const userId = req.params.userId;
-            const userInfo = await PartiesDAO.getUserInfo(userId);
+            const userId = res.locals.user.userId;
+            const userInfo = await PartiesDAO.getAccountInfo(userId);
             if (!userInfo) {
-                res.status(400).json({ error: "could not find user"});
+                res.status(400).json({ success: false, message: "could not find account" });
             }
-            res.json({userInfo});
+            res.json({ success: true, username: userInfo.username, userId: userInfo.userId, access: userInfo.access, numParty: userInfo.numParty, parties: userInfo.parties });
         } catch (e) {
-            res.status(500).json({ error: e.message });
+            res.status(500).json({ success: false, message: "Failed to retrieve account info" });
+        }
+    }
+
+    static async apiDeleteAccount(req, res, next) {
+        try {
+            const userId = res.locals.user.userId;
+            const deleteRes = await PartiesDAO.deleteAccount(userId);
+            if (!deleteRes) {
+                res.status(400).json({ success: false, message: "Could not find account to delete" });
+            }
+            res.json({ success: true, message: "Successfully deleted account."});
+        } catch (e) {
+            res.status(500).json({ success: false, message: "Failed to delete account."});
         }
     }
 
