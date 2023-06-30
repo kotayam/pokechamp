@@ -76,9 +76,7 @@ function returnParty(url) {
     mainParty.style.display = "none";
     errorBox.style.display = "block";
     errText.innerText = "Failed to load party.";
-  });
-    
-    
+  }); 
 }
 
 async function getPokeInfo(url) {
@@ -227,7 +225,7 @@ function deleteParty() {
         throw new Error("failed to delete party");
       }
     }
-    location.href = "index.html";
+    location.reload();
   })
   .catch (e => {
     console.error(e);
