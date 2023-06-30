@@ -46,12 +46,12 @@ function returnParty(url) {
     mainParty.style.display = "block";
     mainParty.innerHTML +=
     `<div class="main">
-      <h2><strong>Title: </strong>${p.title}</h2>
-      <p><strong>Series: </strong>${p.series}</p>
-      <p><strong>By: </strong>${p.user}</p>
+      <h2  style="overflow:scroll"><strong>Title: </strong>${p.title}</h2>
+      <p style="overflow:scroll;"><strong>Series: </strong>${p.series}</p>
+      <p style="overflow:scroll;"><strong>By: </strong>${p.user}</p>
       <ul class="poke">
       </ul>
-      <p><strong>Comment: </strong>${p.comment}</p>
+      <p style="overflow:scroll;white-space:normal"><strong>Comment: </strong>${p.comment}</p>
     </div>`;
     let pt = JSON.parse(p.party);
     const poke = document.querySelector(".poke");

@@ -32,7 +32,7 @@ export default class PartiesDAO {
             }
             return;
         } catch (e) {
-            console.error(`Unable to post party: ${e}`);
+            console.error(e);
             throw new Error("unable to post party");
         }
     }
@@ -41,7 +41,7 @@ export default class PartiesDAO {
         try {
             return await Party.findOne({ _id: new ObjectId(partyId) });
         } catch (e) {
-            console.error(`Unable to get party: ${e}`);
+            console.error(e);
             throw new Error("unable to get party");
         }
     }
@@ -62,7 +62,7 @@ export default class PartiesDAO {
             );
             return updateResponse;
         } catch (e) {
-            console.error(`Unable to update party: ${e}`);
+            console.error(e);
             throw new Error("unable to update party");
         }
     }
@@ -71,7 +71,8 @@ export default class PartiesDAO {
         try {
             const deleteRes = await Party.findOneAndDelete({ _id: new ObjectId(partyId) });
             if (deleteRes) {
-                const acc = await Account.findOne({ _id: deleteRes.userId });
+                const userId = new ObjectId(deleteRes.userId);
+                const acc = await Account.findOne({ _id: userId });
                 if (acc) {
                     let parties = acc.parties;
                     let idx = parties.indexOf(deleteRes._id.toString());
@@ -87,7 +88,7 @@ export default class PartiesDAO {
             }
             return;
         } catch (e) {
-            console.error(`Unable to delete party: ${e}`);
+            console.error(e);
             throw new Error("unable to delete party")
         }
     }
@@ -97,7 +98,7 @@ export default class PartiesDAO {
             const parties = await Party.find();
             return parties;
         } catch (e) {
-            console.error(`Unable to get all parties: ${e}`);
+            console.error(e);
             return { error: e };
         }
     }
@@ -110,6 +111,7 @@ export default class PartiesDAO {
             }
             return userInfo;
         } catch (e) {
+            console.error(e);
             return;
         }
     }
@@ -119,7 +121,7 @@ export default class PartiesDAO {
             const deleteRes = await Account.findOneAndDelete({ _id: new ObjectId(userId) });
             return deleteRes;
         } catch (e) {
-            console.error(`Unable to delete account: ${e}`);
+            console.error(e);
             throw new Error("Failed to delete account.")
         }
     }
@@ -153,7 +155,7 @@ export default class PartiesDAO {
                 return;
             }
         } catch (e) {
-            console.error(`Unable to login: ${e}`);
+            console.error(e);
             return;
         }
         
@@ -176,7 +178,7 @@ export default class PartiesDAO {
             };
             return await Account.create(account); 
         } catch (e) {
-            console.error(`Unable to login: ${e}`);
+            console.error(e);
             return;
         }
     }

@@ -66,10 +66,10 @@ function login(access="") {
     })
     .catch(e => {
         console.error(e); 
-        const loginBox = document.querySelector(".login-box");
+        const loginContainer = document.querySelector(".login-container");
         const errorBox = document.querySelector(".error-box");
         const errText = document.querySelector(".error-message");
-        loginBox.style.display = "none";
+        loginContainer.style.display = "none";
         errorBox.style.display = "block";
         errText.innerText = "Failed to login."
     });

@@ -1,3 +1,5 @@
+import logout from "./main.js";
+
 const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 // const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
@@ -100,6 +102,7 @@ function deleteAccount() {
               throw new Error("failed to delete account");
             }
         }
+        logout();
         location.href = "login.html?f=login";
     })
     .catch(e => {

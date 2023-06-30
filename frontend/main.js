@@ -6,8 +6,6 @@ const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 
 window.onload = function() {
   returnParties(DB_APILINK + `home`);
-  const footer = document.querySelector("#footer");
-  footer.style.display = "block";
 }
 
 function returnParties(url) {
@@ -23,6 +21,7 @@ function returnParties(url) {
   const posts = document.querySelector("#posts");
   const errorBox = document.querySelector(".error-box");
   const errorText = document.querySelector(".error-message");
+  const errorRedirect = document.querySelector(".error-redirect");
 
   fetch(url, {
     method: "GET",
@@ -83,6 +82,8 @@ function returnParties(url) {
     console.error(e);
     errorBox.style.display = "block";
     errorText.innerText = "Failed to load home page."
+    errorRedirect.href = "login.html?f=login";
+    errorRedirect.innerText = "return to login page";
   });
 }
 
@@ -174,7 +175,7 @@ function refreshAccess() {
   });
 }
 
-function logout() {
+export default function logout() {
   fetch(DB_APILINK + "logout", {
     method: "POST",
     credentials: "include",
