@@ -175,7 +175,7 @@ function refreshAccess() {
   });
 }
 
-export default function logout() {
+function logout() {
   fetch(DB_APILINK + "logout", {
     method: "POST",
     credentials: "include",

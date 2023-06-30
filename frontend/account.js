@@ -1,5 +1,3 @@
-import logout from "./main.js";
-
 const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 // const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
@@ -88,6 +86,8 @@ function confirmDelete() {
 }
 
 function deleteAccount() {
+    const errorBox = document.querySelector(".error-box");
+    const errorText = document.querySelector(".error-message");
     fetch(DB_APILINK + "account", {
         method: "DELETE",
         credentials: "include"
@@ -103,11 +103,36 @@ function deleteAccount() {
             }
         }
         logout();
-        location.href = "login.html?f=login";
     })
     .catch(e => {
         console.error(e);
         errorBox.style.display = "block";
         errorText.innerText = "Failed to delete account"
     })
+}
+
+function logout() {
+    const errorBox = document.querySelector(".error-box");
+    const errorText = document.querySelector(".error-message");
+
+    fetch(DB_APILINK + "logout", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          location.href = "login.html?f=login";
+        } else {
+          throw new Error("failed to logout");
+        }
+      })
+      .catch (e => {
+        console.error(e);
+        errorBox.style.display = "block";
+        errorText.innerText = "Failed to logout";
+      });
 }
