@@ -218,6 +218,7 @@ function deleteParty() {
   })
   .then(res => res.json())
   .then(res => {
+    console.log(res);
     if (!res.success) {
       if (res.refresh) {
         location.href = "index.html";
@@ -225,7 +226,7 @@ function deleteParty() {
         throw new Error("failed to delete party");
       }
     }
-    location.reload();
+    location.href = "index.html";
   })
   .catch (e => {
     console.error(e);
