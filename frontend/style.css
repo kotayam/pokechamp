@@ -129,8 +129,14 @@ body {
     text-align: center;
 }
 
-.extend-box, .loading-box {
+.extend-box {
     max-width: 700px; 
+    margin: 0 auto; 
+    text-align: center;
+}
+
+.loading-box {
+    max-width: 500px; 
     margin: 0 auto; 
     text-align: center;
 }

@@ -5,7 +5,7 @@ const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 // const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 window.onload = function() {
-  const loadingBox = document.querySelector(".loding-box");
+  const loadingBox = document.querySelector(".loading-box");
   loadingBox.style.display = "none";
   returnParties(DB_APILINK + `home`);
 }
