@@ -5,8 +5,6 @@ const DB_APILINK = 'https://pcbackend.heppoko.space/api/v1/pokechamp/';
 // const DB_APILINK = 'http://localhost:8000/api/v1/pokechamp/';
 
 window.onload = function() {
-  const loadingBox = document.querySelector(".loading-box");
-  loadingBox.style.display = "none";
   returnParties(DB_APILINK + `home`);
 }
 
@@ -24,6 +22,7 @@ function returnParties(url) {
   const errorBox = document.querySelector(".error-box");
   const errorText = document.querySelector(".error-message");
   const errorRedirect = document.querySelector(".error-redirect");
+  const loadingBox = document.querySelector(".loading-box");
 
   fetch(url, {
     method: "GET",
@@ -31,6 +30,7 @@ function returnParties(url) {
   })
   .then(res => res.json())
   .then(data => {
+    loadingBox.style.display = "none";
     if (!data.success) {
       if (data.refresh) {
         extendBox.style.display = "block";
